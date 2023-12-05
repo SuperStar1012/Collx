@@ -1,0 +1,11 @@
+diff --git a/node_modules/stream-chat-react-native/src/handlers/compressImage.ts b/node_modules/stream-chat-react-native/src/handlers/compressImage.ts
+index c7f2e0e..4f76ed9 100644
+--- a/node_modules/stream-chat-react-native/src/handlers/compressImage.ts
++++ b/node_modules/stream-chat-react-native/src/handlers/compressImage.ts
+@@ -1,5 +1,5 @@
+ // @ts-ignore this module does not have a type declaration
+-import ImageResizer from 'react-native-image-resizer';
++import ImageResizer from '@bam.tech/react-native-image-resizer';
+ 
+ type CompressImageParams = {
+   compressImageQuality: number;

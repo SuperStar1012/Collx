@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-native-formatted-text/src/FormattedText/FormattedText.js b/node_modules/react-native-formatted-text/src/FormattedText/FormattedText.js
+index 1264ee3..b6506b6 100644
+--- a/node_modules/react-native-formatted-text/src/FormattedText/FormattedText.js
++++ b/node_modules/react-native-formatted-text/src/FormattedText/FormattedText.js
+@@ -94,7 +94,7 @@ const FormattedText = ({
+   );
+ 
+   if (ranges.length === 0) {
+-    console.warn("no format found");
++    // console.warn("no format found");
+     return <Text {...props}>{children}</Text>;
+   }
+ 

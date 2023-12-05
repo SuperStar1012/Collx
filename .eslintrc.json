@@ -1,0 +1,45 @@
+{
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "env": {
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "react",
+    "react-native"
+  ],
+  "rules": {
+    // disallow unused styles
+    // "react-native/no-unused-styles": "error",
+  
+    // allow .js files to contain JSX code
+    "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx"] }],
+  
+    // prevent eslint to complain about the "styles" variable being used before it was defined
+    "no-use-before-define": ["error", { "variables": false }],
+
+    // Ignore prop-types errors -- it's deprecated anyway.
+    "react/prop-types": "off",
+
+    "react/no-unescaped-entities": "off",
+
+    "no-trailing-spaces": "error",
+
+    "no-unused-vars": "off"
+  }
+}

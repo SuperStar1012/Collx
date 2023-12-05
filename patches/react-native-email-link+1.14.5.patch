@@ -1,0 +1,23 @@
+diff --git a/node_modules/react-native-email-link/src/ios.js b/node_modules/react-native-email-link/src/ios.js
+index 217143d..1533a71 100644
+--- a/node_modules/react-native-email-link/src/ios.js
++++ b/node_modules/react-native-email-link/src/ios.js
+@@ -17,7 +17,7 @@ const prefixes = {
+ };
+ 
+ const titles = {
+-  "apple-mail": "Mail",
++  "apple-mail": "Apple Mail",
+   gmail: "Gmail",
+   inbox: "Inbox",
+   spark: "Spark",
+@@ -200,9 +200,6 @@ export function askAppChoice(
+     if (!availableApps.length) {
+       return reject(new EmailException("No email apps available"));
+     }
+-    if (availableApps.length === 1) {
+-      return resolve(availableApps[0]);
+-    }
+ 
+     let options = availableApps.map((app) =>
+       actionType === "compose" && app === "apple-mail"

@@ -1,0 +1,4018 @@
+schema {
+  query: RootQueryType
+  mutation: RootMutationType
+  subscription: RootSubscriptionType
+}
+
+"""Exposes a URL that specifies the behavior of this scalar."""
+directive @specifiedBy(
+  """The URL that specifies the behavior of this scalar."""
+  url: String!
+) on SCALAR
+
+input AcceptOfferFromInput {
+  buyerId: ID
+  sellerId: ID
+}
+
+input AcceptOfferInput {
+  from: AcceptOfferFromInput!
+}
+
+type AcceptOfferPayload {
+  deal: Deal
+  errors: [ErrorMessage!]
+  success: Boolean!
+}
+
+interface Activity {
+  at: DateTime!
+  featured: Boolean!
+  id: ID!
+  who: Profile!
+}
+
+type ActivityComment implements Comment & Node {
+  about: Activity!
+  at: DateTime!
+
+  """The ID of an object"""
+  id: ID!
+  likes: Likes!
+  replies: [Comment!]
+  reported: Boolean
+  text: String!
+  viewer: CommentViewer!
+  who: Profile!
+}
+
+type ActivityConnection {
+  edges: [ActivityEdge]
+  pageInfo: PageInfo!
+}
+
+type ActivityEdge {
+  cursor: String
+  node: Activity
+}
+
+"""Options that can be used to filter a list of activities"""
+input ActivityWith {
+  game: Game
+  sport: Sport
+}
+
+input AddCardsFromOrderToCollectionInput {
+  orderId: ID!
+}
+
+type AddCardsFromOrderToCollectionPayload {
+  errors: [ErrorMessage!]
+  order: Order
+  success: Boolean!
+  tradingCards: [TradingCard!]!
+}
+
+type AddedCardsActivity implements Activity & Node {
+  at: DateTime!
+  featured: Boolean!
+
+  """The ID of an object"""
+  id: ID!
+  tradingCards(first: Int = 5): [TradingCard!]!
+  who: Profile!
+}
+
+input AddIssueAttachmentsToIssueInput {
+  issueAttachmentIds: [ID!]!
+  with: AddIssueAttachmentsToIssueWithInput!
+}
+
+type AddIssueAttachmentsToIssuePayload {
+  errors: [ErrorMessage!]
+  issue: Issue
+  success: Boolean!
+}
+
+input AddIssueAttachmentsToIssueWithInput {
+  issueId: ID!
+}
+
+input AddIssueNoteInput {
+  issueId: ID!
+  note: String!
+}
+
+type AddIssueNotePayload {
+  errors: [ErrorMessage!]
+  issueNote: IssueNote
+  success: Boolean!
+}
+
+"""An Address"""
+type Address implements Node {
+  """Address1"""
+  address1: String!
+
+  """Address2"""
+  address2: String
+
+  """Who is being sent to?"""
+  careOf: String
+
+  """City"""
+  city: String!
+
+  """Country in 2 uppercase letters format"""
+  country: String!
+
+  """The ID of an object"""
+  id: ID!
+
+  """Name of the addressing"""
+  name: String!
+
+  """Postal Code"""
+  postalCode: String!
+
+  """State (for the US must be in the format of 2 uppercase letters)"""
+  state: String!
+}
+
+input AddTradingCardsToDealInput {
+  tradingCardIds: [ID!]!
+  with: AddTradingCardsToDealWithInput!
+}
+
+type AddTradingCardsToDealPayload {
+  deal: Deal
+  errors: [ErrorMessage!]
+  success: Boolean!
+}
+
+input AddTradingCardsToDealWithInput {
+  sellerId: ID!
+}
+
+input AddTradingCardsToSavedForLaterInput {
+  removeFromDeal: Boolean = false
+  tradingCardIds: [ID!]!
+}
+
+type AddTradingCardsToSavedForLaterPayload {
+  errors: [ErrorMessage!]
+  success: Boolean!
+}
+
+enum AllOrdersOrder {
+  ID_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
+enum AllWithdrawalsOrder {
+  ID_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
+"""An article"""
+type Article implements Node {
+  """The ID of an object"""
+  id: ID!
+  source: String!
+  thumbnailImageUrl: String
+  title: String!
+  url: String!
+}
+
+type ArticleConnection {
+  count: Int
+  edges: [ArticleEdge]
+  pageInfo: PageInfo!
+}
+
+type ArticleEdge {
+  cursor: String
+  node: Article
+}
+
+input AssignIssueInput {
+  issueId: ID!
+  userId: ID!
+}
+
+type AssignIssuePayload {
+  errors: [ErrorMessage!]
+  issue: Issue
+  success: Boolean!
+}
+
+"""A brand"""
+type Brand implements Node {
+  """The ID of an object"""
+  id: ID!
+  name: String!
+  sets: [Set!]!
+}
+
+"""Options that can be used to find a single brand"""
+input BrandWith {
+  name: String
+}
+
+type BuyerSettings {
+  stripeConnectedAccountId: String
+  stripeCustomerId: String
+  stripeDefaultPaymentMethodId: String
+}
+
+input BuyItNowActiveDealWithInput {
+  sellerId: ID
+}
+
+input BuyItNowDealWithInput {
+  id: ID
+}
+
+input BuyItNowInput {
+  activeDeal: BuyItNowActiveDealWithInput
+  deal: BuyItNowDealWithInput
+  tradingCard: BuyItNowTradingCardWithInput
+}
+
+type BuyItNowPayload {
+  deal: Deal
+  errors: [ErrorMessage!]
+  success: Boolean!
+}
+
+input BuyItNowTradingCardWithInput {
+  id: ID
+}
+
+input CancelDealInput {
+  with: CancelDealWithInput!
+}
+
+type CancelDealPayload {
+  deal: Deal
+  errors: [ErrorMessage!]
+  success: Boolean!
+}
+
+input CancelDealWithInput {
+  buyerId: ID
+  sellerId: ID
+}
+
+input CancelOrderInput {
+  orderId: ID!
+}
+
+type CancelOrderPayload {
+  errors: [ErrorMessage!]
+  order: Order
+  success: Boolean!
+}
+
+enum CaptureType {
+  GRADED
+  RAW
+  UNKNOWN
+}
+
+enum CaptureTypeOption {
+  GRADED
+  RAW
+  UNKNOWN
+}
+
+interface Card {
+  allMarketValues: [CardMarketValue]!
+  backImageUrl(format: CardImageFormat = FULL, usePlaceholderWhenAbsent: Boolean = true): String
+  brand: Brand
+
+  """External URLs"""
+  externalUrls: CardExternalUrls!
+  frontImageUrl(format: CardImageFormat = FULL): String
+  id: ID
+
+  """The market value of a card, which depends on it's condition"""
+  marketValue(assumingCondition: String = "Very Good"): MarketValue
+  name: String!
+  note: String
+  number: String
+  recentSales: RecentSales
+
+  """Is this card reported?"""
+  reported: Boolean
+  set: Set
+  shareUrl: String!
+  tradingCards(after: String, before: String, first: Int, last: Int, orderBy: [TradingCardOrder!], with: TradingCardsForCardsWith = {excludeAnonymousOwners: true, excludeBlockedOwners: true, states: [LISTED, ACCEPTING_OFFERS, NOT_FOR_SALE, UNIDENTIFIED]}): TradingCardConnection
+
+  """Information about this Card, from the viewer's perspective."""
+  viewer(asProfile: ID): CardViewer!
+  year: Int
+}
+
+type CardComment implements Comment & Node {
+  about: TradingCard!
+  at: DateTime!
+
+  """The ID of an object"""
+  id: ID!
+  likes: Likes!
+  replies: [Comment!]
+  reported: Boolean
+  text: String!
+  viewer: CommentViewer!
+  who: Profile!
+}
+
+"""The condition of a card"""
+type CardCondition {
+  gradingScale: GradingScale!
+  name: String!
+}
+
+"""Options that can be used to find a single card condition"""
+input CardConditionWith {
+  name: String
+}
+
+type CardConnection {
+  count: Int
+  edges: [CardEdge]
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type CardEdge {
+  cursor: String
+  node: Card
+}
+
+type CardExternalUrls {
+  ebayUrl: String!
+}
+
+"""Which side of the card?"""
+enum CardFace {
+  BACK
+  FRONT
+}
+
+enum CardImageFormat {
+  FULL
+  THUMBNAIL
+}
+
+"""A market value for a given condition"""
+type CardMarketValue {
+  condition: CardCondition!
+  marketValue: MarketValue
+}
+
+enum CardOrder {
+  NUMBER
+  PLAYER_NAME
+  SET_NAME
+  TEAM_NAME
+  YEAR
+}
+
+"""Options that can be used to filter a list of cards"""
+input CardsWith {
+  brand: BrandWith
+  condition: CardConditionWith
+  game: Game
+  ids: [ID!]
+  player: PlayerWith
+  rawIds: [Int!]
+  set: SetWith
+  sport: Sport
+  team: TeamWith
+  year: Int
+}
+
+type CardViewer {
+  isInMyCollection: Boolean!
+  tradingCards: [TradingCard!]!
+}
+
+"""Options that can be used to find a single card"""
+input CardWith {
+  id: ID
+}
+
+"""A character"""
+type Character implements Node & Promptable {
+  aiPromptSuggestion: String!
+
+  """The ID of an object"""
+  id: ID!
+  name: String
+}
+
+type CharacterConnection {
+  edges: [CharacterEdge]
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type CharacterEdge {
+  cursor: String
+  node: Character
+}
+
+"""Options that can be used to filter a list of characters"""
+input CharactersWith {
+  game: Game
+}
+
+"""Options that can be used to find a single character"""
+input CharacterWith {
+  game: Game
+  id: ID
+  name: String
+}
+
+type ChargeBreakdownItem {
+  type: ChargeBreakdownItemType!
+  value: Money
+}
+
+enum ChargeBreakdownItemType {
+  CREDIT_APPLIED
+  DISCOUNT
+  MERCHANDISE_VALUE
+  SHIPPING_COST
+  TOTAL
+}
+
+enum CheckoutOrderBalancePaymentMethod {
+  STRIPE
+}
+
+input CheckoutOrderInput {
+  balancePaymentMethod: CheckoutOrderBalancePaymentMethod = STRIPE
+  orderId: ID!
+  stripePaymentMethod: String
+}
+
+type CheckoutOrderPayload {
+  errors: [ErrorMessage!]
+  order: Order
+  success: Boolean!
+}
+
+input ClearPendingFlagForTradingCardsInput {
+  ids: [ID!]!
+}
+
+type ClearPendingFlagForTradingCardsPayload {
+  errors: [ErrorMessage!]
+  success: Boolean!
+  tradingCards: [TradingCard!]
+}
+
+input CloseIssueInput {
+  issueId: ID!
+}
+
+type CloseIssuePayload {
+  errors: [ErrorMessage!]
+  issue: Issue
+  success: Boolean!
+}
+
+interface Comment {
+  at: DateTime!
+  id: ID!
+  likes: Likes!
+  replies: [Comment!]
+  reported: Boolean
+  text: String!
+  viewer: CommentViewer!
+  who: Profile!
+}
+
+type CommentConnection {
+  edges: [CommentEdge]
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type CommentEdge {
+  cursor: String
+  node: Comment
+}
+
+type CommentedOnCardActivity implements Activity & Node {
+  at: DateTime!
+  comment: Comment
+  featured: Boolean!
+
+  """The ID of an object"""
+  id: ID!
+  tradingCard: TradingCard
+  who: Profile!
+}
+
+type CommentNotification implements Node & Notification {
+  at: DateTime!
+  comment: Comment
+  expiresAt: Int
+
+  """The ID of an object"""
+  id: ID!
+  imageUrl: String
+  message: String
+  owner: Profile!
+  read: Boolean!
+  tradingCard: TradingCard
+  who: Profile
+}
+
+type CommentReplyNotification implements Node & Notification {
+  at: DateTime!
+  expiresAt: Int
+
+  """The ID of an object"""
+  id: ID!
+  imageUrl: String
+  message: String
+  owner: Profile!
+  read: Boolean!
+  replyToComment: Comment
+  tradingCard: TradingCard
+  who: Profile
+}
+
+type CommentViewer {
+  """Do I like this comment?"""
+  isLikedByMe: Boolean!
+
+  """Is this *my* comment?"""
+  isMine: Boolean!
+}
+
+input CommentWithInput {
+  id: ID!
+}
+
+input CompleteRefundOnOrderInput {
+  orderId: ID!
+}
+
+type CompleteRefundOnOrderPayload {
+  errors: [ErrorMessage!]
+  order: Order
+  success: Boolean!
+}
+
+input CreateAddressInput {
+  address1: String!
+  address2: String
+  careOf: String
+  city: String!
+  country: String
+  name: String!
+  postalCode: String!
+  state: String!
+}
+
+type CreateAddressPayload {
+  address: Address
+  errors: [ErrorMessage!]
+  success: Boolean!
+}
+
+input CreateCommentForInput {
+  activityId: ID
+  commentId: ID
+  tradingCardId: ID
+}
+
+input CreateCommentInput {
+  for: CreateCommentForInput!
+  text: String!
+}
+
+type CreateCommentPayload {
+  comment: Comment
+  errors: [ErrorMessage!]
+  success: Boolean!
+}
+
+input CreateIssueAttachmentInput {
+  filename: String!
+}
+
+type CreateIssueAttachmentPayload {
+  errors: [ErrorMessage!]
+  issueAttachment: IssueAttachment
+  success: Boolean!
+}
+
+input CreateIssueForInput {
+  cardId: ID
+  commentId: ID
+  orderId: ID
+  profileId: ID
+  saleId: ID
+  tradingCardId: ID
+}
+
+input CreateIssueInput {
+  category: IssueCategory!
+  for: CreateIssueForInput!
+  notes: String
+  state: IssueState
+  type: IssueType!
+}
+
+type CreateIssuePayload {
+  errors: [ErrorMessage!]
+  issue: Issue
+  success: Boolean!
+}
+
+input CreateNotificationInput {
+  data: Json
+  expiresAt: Int
+  imageUrl: String
+  message: String
+  read: Boolean
+  type: NotificationType
+  userId: String
+}
+
+type CreateNotificationPayload {
+  errors: [ErrorMessage!]
+  notification: Notification
+  success: Boolean!
+}
+
+input CreateOrderInput {
+  dealId: ID!
+}
+
+type CreateOrderPayload {
+  errors: [ErrorMessage!]
+  order: Order
+  success: Boolean!
+}
+
+input CreateOrUpdateInstallationInput {
+  apnsToken: String
+  appVersion: String!
+  bundleId: String
+  deviceId: String!
+  deviceModel: String
+  deviceName: String
+  deviceVersion: String
+  ipAddress: String
+  locale: String
+  registrationId: String
+  systemName: String
+  timezone: String
+}
+
+type CreateOrUpdateInstallationPayload {
+  errors: [ErrorMessage!]
+  mobileApp: MobileApp
+  success: Boolean!
+}
+
+input CreateRefundOnOrderInput {
+  orderId: ID!
+  withReturn: Boolean!
+}
+
+type CreateRefundOnOrderPayload {
+  errors: [ErrorMessage!]
+  order: Order
+  success: Boolean!
+}
+
+input CreateStripeConnectedAccountCompanyInput {
+  companyName: String!
+}
+
+input CreateStripeConnectedAccountIndividualInput {
+  firstName: String!
+  lastName: String!
+}
+
+input CreateStripeConnectedAccountInput {
+  company: CreateStripeConnectedAccountCompanyInput
+  individual: CreateStripeConnectedAccountIndividualInput
+}
+
+type CreateStripeConnectedAccountPayload {
+  errors: [ErrorMessage!]
+  success: Boolean!
+  viewer: Viewer
+}
+
+input CreateTradingCardFromInput {
+  cardId: ID
+  scanId: ID
+}
+
+input CreateTradingCardInput {
+  from: CreateTradingCardFromInput
+  with: CreateTradingCardWithInput = {}
+}
+
+type CreateTradingCardPayload {
+  errors: [ErrorMessage!]
+  success: Boolean!
+  tradingCard: TradingCard
+}
+
+input CreateTradingCardWithInput {
+  autographed: Boolean
+  captureType: CaptureType
+  certificationNumber: String
+  condition: CardConditionWith
+  game: Game
+  notes: String
+  pending: Boolean
+  platform: Platform
+  public: Boolean
+  purchaseDate: Date
+  purchasePrice: MoneyInput
+  source: TradingCardSource
+  sport: Sport
+}
+
+type CreditNotification implements Node & Notification {
+  at: DateTime!
+  expiresAt: Int
+
+  """The ID of an object"""
+  id: ID!
+  imageUrl: String
+  message: String
+  owner: Profile!
+  read: Boolean!
+  who: Profile
+}
+
+enum CurrencyCode {
+  """United States Dollars"""
+  USD
+}
+
+"""
+The `Date` scalar type represents a date. The Date appears in a JSON
+response as an ISO8601 formatted string, without a time component.
+"""
+scalar Date
+
+"""
+The `DateTime` scalar type represents a date and time in the UTC
+timezone. The DateTime appears in a JSON response as an ISO8601 formatted
+string, including UTC timezone ("Z"). The parsed date and time string will
+be converted to UTC if there is an offset.
+"""
+scalar DateTime
+
+"""A deal"""
+type Deal implements Node {
+  """What is the buy-it-now price, including any seller discount (if any)?"""
+  buyItNowPrice: Money
+
+  """Who is buying?"""
+  buyer: Profile!
+
+  """If the deal was cancelled, who was it cancelled by?"""
+  cancelledBy: DealCancelledBy
+
+  """A detailed breakdown of the deal"""
+  chargeBreakdown: [ChargeBreakdownItem!]
+  date: DateTime
+
+  """The ID of an object"""
+  id: ID!
+
+  """Is this deal currently active?"""
+  isActive: Boolean!
+
+  """
+  Next action to be performed for an Deal:
+      - REVISE - by buyer and/or seller
+  """
+  nextAction: DealNextAction
+
+  """The next action due for this deal"""
+  nextActionDueAt: DateTime
+  number: String
+
+  """What is the current offer, and who made it?"""
+  offer: DealOffer
+
+  """The order that has been created as the result of this deal"""
+  order: Order
+
+  """The previous state of this deal"""
+  previousState: DealState
+
+  """How many changes have been made to this Deal?"""
+  revision: Int!
+
+  """Who is selling?"""
+  seller: Profile!
+
+  """The seller's discount structure"""
+  sellerDiscount: DealSellerDiscount
+
+  """The current state of this deal"""
+  state: DealState!
+
+  """The list of trading cards that will be sold as part of this deal"""
+  tradingCards: [TradingCard!]!
+
+  """Trading Cards that may be of interest."""
+  tradingCardsRecommendedForBuyer(after: String, before: String, first: Int, last: Int): TradingCardConnection
+
+  """The last time the deal was changed"""
+  updatedAt: DateTime!
+
+  """Information about this Deal, from the viewer's perspective."""
+  viewer: DealViewer!
+}
+
+enum DealCancelledBy {
+  BUYER
+  SELLER
+  SYSTEM
+}
+
+type DealConnection {
+  edges: [DealEdge]
+  pageInfo: PageInfo!
+}
+
+type DealEdge {
+  cursor: String
+  node: Deal
+}
+
+enum DealNextAction {
+  REVISE
+}
+
+type DealNotification implements Node & Notification {
+  at: DateTime!
+  expiresAt: Int
+
+  """The ID of an object"""
+  id: ID!
+  imageUrl: String
+  link: String!
+  message: String
+  owner: Profile!
+  read: Boolean!
+  who: Profile
+}
+
+type DealOffer {
+  madeBy: DealOfferBy!
+  value: Money!
+}
+
+enum DealOfferBy {
+  BUYER
+  SELLER
+}
+
+"""The discount structure offered by the seller, if any"""
+type DealSellerDiscount {
+  """The price break to be applied, as a percentage: 10%, 15%, etc."""
+  percentage: Int
+
+  """A deal can receive a price break if it's above this value."""
+  priceBreakAt: Money
+}
+
+enum DealsOrder {
+  UPDATED_AT_DESC
+}
+
+enum DealState {
+  ACCEPTED
+  CANCELLED
+  COMPLETED
+  EXPIRED
+  OFFER_SENT
+  PENDING
+  REJECTED
+}
+
+"""Options that can be used to filter a list of deals"""
+input DealsWith {
+  includeEmpty: Boolean = false
+  isActive: Boolean
+  meAs: DealsWithMeAs = EITHER
+  states: [DealState!]
+}
+
+enum DealsWithMeAs {
+  BUYER
+  EITHER
+  SELLER
+}
+
+type DealViewer {
+  """Can I accept an offer on this Deal?"""
+  canAcceptOffer: Boolean!
+
+  """Can I buy it now? (Are all of the Trading Cards in the deal listed?)"""
+  canBuyItNow: Boolean!
+
+  """Can I make an offer on this Deal?"""
+  canMakeOffer: Boolean!
+}
+
+"""Options that can be used to find a single Deal"""
+input DealWith {
+  id: ID
+  number: ID
+}
+
+"""
+The `Decimal` scalar type represents signed double-precision fractional
+values parsed by the `Decimal` library. The Decimal appears in a JSON
+response as a string to preserve precision.
+"""
+scalar Decimal
+
+type DeeplinkNotification implements Node & Notification {
+  at: DateTime!
+  expiresAt: Int
+
+  """The ID of an object"""
+  id: ID!
+  imageUrl: String
+  link: String!
+  message: String
+  owner: Profile!
+  read: Boolean!
+  who: Profile
+}
+
+input DeleteAddressInput {
+  with: DeleteAddressWithInput!
+}
+
+type DeleteAddressPayload {
+  errors: [ErrorMessage!]
+  success: Boolean!
+}
+
+input DeleteAddressWithInput {
+  addressId: ID!
+}
+
+input DeleteCommentInput {
+  with: DeleteCommentWithInput!
+}
+
+type DeleteCommentPayload {
+  errors: [ErrorMessage!]
+  success: Boolean!
+}
+
+input DeleteCommentWithInput {
+  commentId: ID!
+}
+
+input DeleteNotificationInput {
+  with: DeleteNotificationWithInput!
+}
+
+type DeleteNotificationPayload {
+  errors: [ErrorMessage!]
+  success: Boolean!
+}
+
+input DeleteNotificationWithInput {
+  id: ID!
+}
+
+input DeleteSavedSearchInput {
+  with: DeleteSavedSearchWithInput
+}
+
+type DeleteSavedSearchPayload {
+  errors: [ErrorMessage!]
+  success: Boolean!
+}
+
+input DeleteSavedSearchWithInput {
+  ids: [ID!]
+}
+
+input DeleteTradingCardsInput {
+  with: DeleteTradingCardsWithInput!
+}
+
+type DeleteTradingCardsPayload {
+  errors: [ErrorMessage!]
+  success: Boolean!
+}
+
+input DeleteTradingCardsWithInput {
+  ids: [ID!]!
+}
+
+input DelistTradingCardInput {
+  tradingCard: TradingCardWithInput!
+}
+
+type DelistTradingCardPayload {
+  errors: [ErrorMessage!]
+  success: Boolean!
+  tradingCard: TradingCard
+}
+
+input DislikeInput {
+  comment: CommentWithInput
+  tradingCard: TradingCardWithInput
+}
+
+type DislikePayload {
+  comment: Comment
+  errors: [ErrorMessage!]
+  success: Boolean!
+  tradingCard: TradingCard
+}
+
+"""The users email status."""
+enum EmailStatusType {
+  BOUNCED
+  REPORTED_AS_SPAM
+  UNSUBSCRIBED
+  UNVERIFIED
+  VERIFIED
+}
+
+type ErrorMessage {
+  message: String!
+  path: [String]!
+}
+
+type ExternalSaleSource {
+  from: ExternalSaleSourceFrom
+  imageUrl: String
+  url: String
+}
+
+"""Where did we get this sale from?"""
+enum ExternalSaleSourceFrom {
+  EBAY
+  TCDB
+  TCGPLAYER
+}
+
+"""Details about the sale of a single card outside of our system"""
+type ExternalSingleCardSale implements Node & SingleCardSale {
+  card: Card!
+  condition: CardCondition
+  date: Date
+  flagged: Boolean
+
+  """The ID of an object"""
+  id: ID!
+  soldFor: Money
+  source: ExternalSaleSource
+}
+
+input FollowedByWith {
+  email: String
+  nameLike: String
+  username: String
+}
+
+input FollowingWith {
+  email: String
+  nameLike: String
+  username: String
+}
+
+type FollowNotification implements Node & Notification {
+  at: DateTime!
+  expiresAt: Int
+
+  """The ID of an object"""
+  id: ID!
+  imageUrl: String
+  message: String
+  owner: Profile!
+  read: Boolean!
+  who: Profile
+}
+
+"""The supported games"""
+enum Game {
+  MAGIC_THE_GATHERING
+  POKEMON
+  YUGIOH
+}
+
+"""A game card"""
+type GameCard implements Card & Node {
+  allMarketValues: [CardMarketValue]!
+  backImageUrl(format: CardImageFormat = FULL, usePlaceholderWhenAbsent: Boolean = true): String
+  brand: Brand
+
+  """External URLs"""
+  externalUrls: CardExternalUrls!
+  flags: [GameCardFlag]
+  frontImageUrl(format: CardImageFormat = FULL): String
+  game: Game!
+
+  """The ID of an object"""
+  id: ID!
+
+  """The market value of a card, which depends on it's condition"""
+  marketValue(assumingCondition: String = "Very Good"): MarketValue
+  name: String!
+  note: String
+  number: String
+  recentSales: RecentSales
+
+  """Is this card reported?"""
+  reported: Boolean
+  set: Set
+  shareUrl: String!
+  tradingCards(after: String, before: String, first: Int, last: Int, orderBy: [TradingCardOrder!], with: TradingCardsForCardsWith = {excludeAnonymousOwners: true, excludeBlockedOwners: true, states: [LISTED, ACCEPTING_OFFERS, NOT_FOR_SALE, UNIDENTIFIED]}): TradingCardConnection
+
+  """Information about this Card, from the viewer's perspective."""
+  viewer(asProfile: ID): CardViewer!
+  year: Int
+}
+
+enum GameCardFlag {
+  AMAZING_RARE
+  CLASSIC_COLLECTION
+  CODE_CARD
+  COLLECTORS_RARE
+  COMMON
+  GHOST_RARE
+  GOLD_RARE
+  GOLD_SECRET_RARE
+  HOLO_RARE
+  LAND
+  MOSAIC_RARE
+  MYTHIC
+  PRISM_RARE
+  PROMO
+  RADIANT_RARE
+  RARE
+  RARE_ACE
+  RARE_BREAK
+  SECRET_PHARAOHS_ARE
+  SECRET_RARE
+  SHATTERFOIL_RARE
+  SHINY_HOLO_RARE
+  SHORT_PRINT
+  STARFOIL_RARE
+  STARLIGHT_RARE
+  SUPER_RARE
+  TOKEN
+  ULTIMATE_RARE
+  ULTRA_RARE
+  UNCOMMON
+  SPECIAL
+}
+
+input GetOrCreateProfileInput {
+  email: String!
+  withApple: GetOrCreateProfileWithAppleInput
+  withCredentials: GetOrCreateProfileWithCredentialsInput
+  withFacebook: GetOrCreateProfileWithFacebookInput
+  withGoogle: GetOrCreateProfileWithGoogleInput
+}
+
+type GetOrCreateProfilePayload {
+  errors: [ErrorMessage!]
+  success: Boolean!
+  viewer: Viewer
+}
+
+input GetOrCreateProfileWithAppleInput {
+  id: String!
+  token: String!
+}
+
+input GetOrCreateProfileWithCredentialsInput {
+  name: String
+  password: String!
+}
+
+input GetOrCreateProfileWithFacebookInput {
+  id: String!
+  token: String!
+}
+
+input GetOrCreateProfileWithGoogleInput {
+  id: String!
+  token: String!
+}
+
+"""A set of conditions that make up a grading scale"""
+type GradingScale {
+  conditions: [CardCondition!]!
+  name: String
+}
+
+type GrantCreditAction {
+  credit: Money!
+}
+
+input GrantCreditInput {
+  credit: MoneyInput!
+  profileId: ID!
+}
+
+type GrantCreditPayload {
+  errors: [ErrorMessage!]
+  profile: Profile
+  success: Boolean!
+}
+
+type InfoNotification implements Node & Notification {
+  at: DateTime!
+  expiresAt: Int
+
+  """The ID of an object"""
+  id: ID!
+  imageUrl: String
+  message: String
+  owner: Profile!
+  read: Boolean!
+  who: Profile
+}
+
+type InitiateEmailVerificationPayload {
+  errors: [ErrorMessage!]
+  profile: Profile!
+  success: Boolean!
+}
+
+"""Details about the sale of a single card"""
+type InternalSingleCardSale implements Node & SingleCardSale {
+  card: Card!
+  condition: CardCondition
+  date: Date
+
+  """The ID of an object"""
+  id: ID!
+  soldFor: Money
+  tradingCard: TradingCard!
+}
+
+"""An Issue"""
+type Issue implements Node {
+  """The user an issue is assigned to"""
+  assignedTo: Profile
+  card: Card
+  cardId: Int
+  category: IssueCategory!
+
+  """The user that closed the issue"""
+  closedBy: Profile
+  comment: Comment
+  commentId: Int
+  createdAt: DateTime
+  date: DateTime
+
+  """The ID of an object"""
+  id: ID!
+
+  """The list of issue attachments that are related to this issue."""
+  issueAttachments: [IssueAttachment!]!
+  issueNotes: [IssueNote!]
+  notes: String
+  order: Order
+  orderId: Int
+  profile: Profile
+  profileId: Int
+
+  """The user that reported the issue"""
+  reportedBy: Profile
+  sale: SingleCardSale
+  saleId: Int
+  state: IssueState!
+  tradingCard: TradingCard
+  type: IssueType!
+  updatedAt: DateTime
+}
+
+"""
+Describes the location of a file asset that can be referenced inside an issue.
+"""
+type IssueAttachment implements Node {
+  """The user that created the issue attachment."""
+  attachedToIssue: Issue
+
+  """The datetime value (in UTC) when the issue attachment was created."""
+  createdAt: DateTime
+
+  """The name of the file provided at creation time."""
+  filename: String
+
+  """The ID of an object"""
+  id: ID!
+
+  """A url that can be used to upload a file for this attachment."""
+  uploadUrl: String
+
+  """The user that created the issue attachment."""
+  uploadedBy: Profile
+
+  """The public internet address of the attachment file."""
+  url: String
+}
+
+enum IssueCategory {
+  BAD_QUALITY_IMAGE
+  CANCEL_ORDER
+  DO_NOT_LIKE
+  FALSE_INFO
+  HARASSMENT
+  ILLEGAL_ACTIVITY
+  INCORRECT_CARD
+  INCORRECT_CARD_NUMBER
+  INCORRECT_CONDITION
+  INCORRECT_DESCRIPTION
+  INCORRECT_GRADE
+  INCORRECT_IMAGE
+  INCORRECT_PLAYER
+  INCORRECT_ROOKIE_YEAR
+  INCORRECT_SERIAL_NUMBER
+  INCORRECT_SET
+  INCORRECT_TEAM
+  INCORRECT_VARIANT
+  MISSING_IMAGE
+  OTHER
+  PART_OF_LOT
+  PRICE_TOO_HIGH
+  PRICE_TOO_LOW
+  REFUND_REQUEST
+  SPAM
+}
+
+type IssueConnection {
+  edges: [IssueEdge]
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type IssueEdge {
+  cursor: String
+  node: Issue
+}
+
+"""An Issue Note"""
+type IssueNote implements Node {
+  createdAt: NaiveDateTime
+
+  """The ID of an object"""
+  id: ID!
+  issue: Issue
+  note: String
+  user: Profile
+}
+
+enum IssuesOrder {
+  NEWEST_FIRST
+  OLDEST_FIRST
+}
+
+enum IssueState {
+  ACTIVE
+  CLOSED
+  OPEN
+}
+
+"""Options that can be used to filter a list of Issue"""
+input IssuesWith {
+  assignedToId: ID
+  cardId: ID
+  categories: [IssueCategory!]
+  idsFor: [IssuesWithIdsFor!]
+  orderId: ID
+  profileId: ID
+  reportedById: ID
+  saleId: ID
+  states: [IssueState!]
+  tradingCardId: ID
+  types: [IssueType!]
+}
+
+enum IssuesWithIdsFor {
+  CARD
+  ORDER
+  SALE
+  TRADING_CARD
+}
+
+enum IssueType {
+  COMMENT
+  IMAGE
+  INFO
+  ORDER
+  OTHER
+  PRICE
+  USER
+}
+
+"""Options that can be used to find a single Issues"""
+input IssueWith {
+  id: ID
+}
+
+"""
+The `Json` scalar type represents arbitrary json string data, represented as UTF-8
+character sequences. The Json type is most often used to represent a free-form
+human-readable json string.
+"""
+scalar Json
+
+"""Options that can be used to find a single sports league"""
+input LeagueWith {
+  name: String
+}
+
+"""A ledger"""
+type Ledger implements Node {
+  """The current balance on this ledger"""
+  balance: Money
+
+  """All of the entries that make up this ledger"""
+  entries(after: String, before: String, first: Int, last: Int): LedgerEntryConnection
+
+  """The ID of an object"""
+  id: ID!
+}
+
+"""A ledger entry"""
+type LedgerEntry implements Node {
+  date: DateTime
+  description: String
+
+  """The ID of an object"""
+  id: ID!
+  isReversed: Boolean
+  order: Order
+  value: Money
+}
+
+type LedgerEntryConnection {
+  edges: [LedgerEntryEdge]
+  pageInfo: PageInfo!
+}
+
+type LedgerEntryEdge {
+  cursor: String
+  node: LedgerEntry
+}
+
+input LikeInput {
+  comment: CommentWithInput
+  tradingCard: TradingCardWithInput
+}
+
+type LikeNotification implements Node & Notification {
+  at: DateTime!
+  expiresAt: Int
+
+  """The ID of an object"""
+  id: ID!
+  imageUrl: String
+  message: String
+  owner: Profile!
+  read: Boolean!
+  tradingCard: TradingCard
+  who: Profile
+}
+
+type LikePayload {
+  comment: Comment
+  errors: [ErrorMessage!]
+  success: Boolean!
+  tradingCard: TradingCard
+}
+
+"""Likes"""
+type Likes {
+  totalCount: Int!
+}
+
+type ListedCardForSaleActivity implements Activity & Node {
+  at: DateTime!
+  featured: Boolean!
+
+  """The ID of an object"""
+  id: ID!
+  tradingCard: TradingCard
+  who: Profile!
+}
+
+input ListTradingCardInput {
+  askingPrice: MoneyInput!
+  tradingCard: TradingCardWithInput!
+}
+
+type ListTradingCardPayload {
+  errors: [ErrorMessage!]
+  success: Boolean!
+  tradingCard: TradingCard
+}
+
+input MakeAnOfferInput {
+  offer: MoneyInput!
+  to: MakeAnOfferToInput!
+}
+
+type MakeAnOfferPayload {
+  deal: Deal
+  errors: [ErrorMessage!]
+  success: Boolean!
+}
+
+input MakeAnOfferToInput {
+  buyerId: ID
+  sellerId: ID
+}
+
+"""Marketing!"""
+type Marketing {
+  onboardingCredit: OnboardingCredit!
+  referralProgramRefer5: ReferralProgramRefer!
+}
+
+type MarketingClaimOnboardingCreditPayload {
+  errors: [ErrorMessage!]
+  success: Boolean!
+  viewer: Viewer
+}
+
+"""The price of a thing, derived from a source."""
+type MarketValue {
+  """The price of the thing"""
+  price: Money!
+
+  """The source of the price"""
+  source: MarketValueSource!
+}
+
+enum MarketValueSource {
+  ASKING
+  AVERAGE
+  ESTIMATION
+  LAST_SALE
+  SALE
+}
+
+input MarkOrderAsCompletedInput {
+  orderId: ID!
+}
+
+type MarkOrderAsCompletedPayload {
+  errors: [ErrorMessage!]
+  order: Order
+  success: Boolean!
+}
+
+input MarkOrderAsShippedInput {
+  orderId: ID!
+}
+
+type MarkOrderAsShippedPayload {
+  errors: [ErrorMessage!]
+  order: Order
+  success: Boolean!
+}
+
+type MarkReadAllNotificationPayload {
+  errors: [ErrorMessage!]
+  success: Boolean!
+  viewer: Viewer
+}
+
+input MarkReadNotificationInput {
+  with: MarkReadNotificationWithInput!
+}
+
+type MarkReadNotificationPayload {
+  errors: [ErrorMessage!]
+  notification: Notification
+  success: Boolean!
+}
+
+input MarkReadNotificationWithInput {
+  id: ID!
+}
+
+input MarkReturnAsDeliveredInput {
+  orderId: ID!
+}
+
+type MarkReturnAsDeliveredPayload {
+  errors: [ErrorMessage!]
+  order: Order
+  success: Boolean!
+}
+
+input MarkTradingCardAsFeaturedInput {
+  tradingCards: [ID!]!
+}
+
+type MarkTradingCardAsFeaturedPayload {
+  errors: [ErrorMessage!]
+  success: Boolean!
+}
+
+input MarkTradingCardAsUnfeaturedInput {
+  tradingCards: [ID!]!
+}
+
+type MarkTradingCardAsUnfeaturedPayload {
+  errors: [ErrorMessage!]
+  success: Boolean!
+}
+
+"""Mobile App properties"""
+type MobileApp implements Node {
+  """The ID of an object"""
+  id: ID!
+
+  """The current version of the app in use"""
+  version: String
+}
+
+type MobileDevice {
+  pushNotificationToken: String
+}
+
+"""A monetary value with currency."""
+type Money {
+  """The amount, as a plain decimal number"""
+  amount: Decimal!
+
+  """The currency code, i.e. USD"""
+  currencyCode: CurrencyCode!
+
+  """
+  The amount, as a formatted value; thousands separators and currency symbol (optionally) included
+  """
+  formattedAmount(
+    """Include the currency code?"""
+    code: Boolean = false
+
+    """Include the currency symbol?"""
+    symbol: Boolean = true
+
+    """Include the thousands separator?"""
+    thousandsSeparator: Boolean = true
+  ): String!
+}
+
+input MoneyInput {
+  amount: Decimal!
+  currencyCode: CurrencyCode!
+}
+
+type MyMoney implements Node {
+  """A ledger for tracking credit"""
+  credit: Ledger
+
+  """The ID of an object"""
+  id: ID!
+
+  """A ledger for tracking income not yet settled"""
+  pending: Ledger
+
+  """A ledger for tracking settled transactions"""
+  settled: Ledger
+  withdrawals(after: String, before: String, first: Int, last: Int): WithdrawalConnection
+}
+
+"""
+The `Naive DateTime` scalar type represents a naive date and time without
+timezone. The DateTime appears in a JSON response as an ISO8601 formatted
+string.
+"""
+scalar NaiveDateTime
+
+interface Node {
+  """The ID of the object."""
+  id: ID!
+}
+
+interface Notification {
+  at: DateTime!
+  expiresAt: Int
+  id: ID!
+  imageUrl: String
+  message: String
+  owner: Profile!
+  read: Boolean!
+  who: Profile
+}
+
+type NotificationConnection {
+  edges: [NotificationEdge]
+  pageInfo: PageInfo!
+  totalCount: Int
+  unreadCount: Int
+}
+
+type NotificationEdge {
+  cursor: String
+  node: Notification
+}
+
+enum NotificationsOrder {
+  AT_DESC
+}
+
+"""Options that can be used to filter a list of Notification"""
+input NotificationsWith {
+  read: Boolean
+  types: [NotificationType!]
+}
+
+enum NotificationType {
+  COMMENT
+  COMMENT_REPLY
+  CREDIT
+  DEAL
+  DEEPLINK
+  FOLLOW
+  INFO
+  LIKE
+  ORDER
+  UPDATE
+  WEBLINK
+}
+
+"""Options that can be used to find a single Notification"""
+input NotificationWith {
+  id: ID
+}
+
+type OnboardingCredit {
+  canClaimCredit: Boolean!
+  claimed: Boolean!
+  hasCompletedOnboarding: Boolean!
+}
+
+"""An order within the marketplace system"""
+type Order implements Node {
+  balanceApplied: Money
+  buyer: Profile!
+
+  """A detailed breakdown of the charges and discounts"""
+  chargeBreakdown: [OrderChargeBreakdownItem!]
+  creditApplied: Money
+  date: DateTime
+  deal: Deal!
+  discountApplied: Money
+
+  """The ID of an object"""
+  id: ID!
+
+  """Issues related to this Order"""
+  issues(after: String, before: String, first: Int, last: Int): IssueConnection
+  merchandiseValue: Money
+
+  """
+  Next action to be performed for an Order:
+      - CHECKOUT - by buyer
+      - SHIP - by seller
+      - COMPLETE - by buyer
+  """
+  nextAction: OrderNextAction
+  nextActionDueAt: DateTime
+  number: String
+
+  """Details specific to payment. Visible by the Buyer"""
+  paymentDetails: PaymentDetails
+
+  """A detailed breakdown of the proceeds"""
+  proceedsBreakdown: [OrderProceedsBreakdownItem!]
+  ratingRecordedForBuyer: Int
+  ratingRecordedForSeller: Int
+
+  """Is this order reported?"""
+  reported: Boolean
+  seller: Profile!
+
+  """Details specific to shipment."""
+  shipmentDetails: ShipmentDetails
+  shippingAddress: Address
+  shippingCharge: Money
+  shippingIsPaidBy: OrderShippingIsPaidBy
+  state: OrderState
+  stateGroup: OrderStateGroup
+  taxToBeCollected: Money
+  taxableValue: Money
+
+  """Changes in the state of this Order"""
+  timeline(after: String, before: String, first: Int, last: Int): OrderTimelineItemConnection
+
+  """Properties relative to the viewer of the Order"""
+  viewer: OrderViewer
+}
+
+type OrderChargeBreakdownItem {
+  type: OrderChargeBreakdownItemType!
+  value: Money
+}
+
+enum OrderChargeBreakdownItemType {
+  BALANCE_APPLIED
+  CREDIT_APPLIED
+  DISCOUNT
+  DUE_AT_CHECKOUT
+  MERCHANDISE_VALUE
+  SHIPPING_COST
+  SHIPPING_DISCOUNT
+  SUBTOTAL
+  TAX
+}
+
+type OrderConnection {
+  edges: [OrderEdge]
+  pageInfo: PageInfo!
+}
+
+type OrderEdge {
+  cursor: String
+  node: Order
+}
+
+enum OrderNextAction {
+  CHECKOUT
+  COMPLETE
+  SHIP
+}
+
+type OrderNotification implements Node & Notification {
+  at: DateTime!
+  expiresAt: Int
+
+  """The ID of an object"""
+  id: ID!
+  imageUrl: String
+  link: String!
+  message: String
+  owner: Profile!
+  read: Boolean!
+  who: Profile
+}
+
+type OrderProceedsBreakdownItem {
+  type: OrderProceedsBreakdownItemType!
+  value: Money
+}
+
+enum OrderProceedsBreakdownItemType {
+  COLLX_FEE
+  DISCOUNT
+  MERCHANDISE_VALUE
+  PROCEEDS
+  SHIPPING_COST
+  SHIPPING_SURCHARGE
+  SUBTOTAL
+}
+
+type OrderRating {
+  average: Float
+  count: Int!
+}
+
+enum OrderShippingIsPaidBy {
+  BUYER
+  SELLER
+}
+
+enum OrderState {
+  AWAITING_PAYMENT
+  AWAITING_SHIPMENT_DETAILS
+  CANCELLED
+  COMPLETED
+  CREATED
+  DELIVERED
+  LOST_IN_SHIPMENT
+  REFUND_COMPLETED
+  REFUND_CREATED
+  REFUND_REQUESTED
+  RETURN_DELIVERED
+  RETURN_DETAILS_PROVIDED
+  RETURN_IN_TRANSIT
+  SHIPPING_DETAILS_PROVIDED
+  TRANSFERRED_TO_CARRIER
+}
+
+enum OrderStateGroup {
+  CANCELLED
+  COMPLETED
+  DELIVERED
+  DISPUTED
+  ORDER_PLACED
+  SHIPPED
+}
+
+"""Options that can be used to filter a list of Order"""
+input OrdersWith {
+  meAs: OrdersWithMeAs = EITHER
+
+  """
+  The profile_id of the buyer or seller. Only allowed if the current user is an
+  admin, and meAs: admin is supplied as well.
+  """
+  profileId: ID
+  reported: Boolean
+  stateGroup: OrderStateGroup
+  states: [OrderState!]
+  tradingCardId: ID
+}
+
+enum OrdersWithMeAs {
+  ADMIN
+  BUYER
+  EITHER
+  SELLER
+}
+
+"""An Order Timeline Item"""
+type OrderTimelineItem implements Node {
+  createdAt: DateTime
+
+  """The ID of an object"""
+  id: ID!
+  reason: TimelineItemReason
+  toState: OrderState
+}
+
+type OrderTimelineItemConnection {
+  edges: [OrderTimelineItemEdge]
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type OrderTimelineItemEdge {
+  cursor: String
+  node: OrderTimelineItem
+}
+
+type OrderViewer {
+  """
+  How much money is available in the account balance that can be applied to this Order?
+  """
+  balanceThatCanBeApplied: Money
+
+  """Can cards be moved to the viewer's collection?"""
+  canCardsBeMovedToCollection: Boolean
+
+  """Can cards be removed from seller's collection?"""
+  canCardsBeRemovedFromSellersCollection: Boolean
+
+  """Can the tracking number be changed?"""
+  canChangeTrackingNumber: Boolean
+
+  """Is it possible for the current viewer to cancel this order?"""
+  canICancel: Boolean
+
+  """Is it possible for the current viewer to checkout?"""
+  canICheckout: Boolean
+
+  """Is it possible for the current viewer to mark this order as completed?"""
+  canIMarkAsCompleted: Boolean
+
+  """
+  Is it possible for the current viewer to request refund for this order?
+  """
+  canIRequestRefund: Boolean
+
+  """
+  How much money is available in the credit balance that can be applied to this Order?
+  """
+  creditThatCanBeApplied: Money
+
+  """
+  A link to the packing-list for this order, available to the seller only
+  """
+  packingListUrl: String
+
+  """If it's not possible to checkout, why?"""
+  reasonICantCheckout: String
+}
+
+"""Options that can be used to find a single Order"""
+input OrderWith {
+  id: ID
+  number: ID
+}
+
+type PageInfo {
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+}
+
+"""Details specific to paying for an order"""
+type PaymentDetails implements Node {
+  """The ID of an object"""
+  id: ID!
+  stripeClientSecret: String
+  stripePaymentIntent: ID
+  stripePaymentMethod: ID
+}
+
+"""The platforms"""
+enum Platform {
+  ANDROID
+  IOS
+  UNKNOWN
+  WEB
+}
+
+"""A player"""
+type Player implements Node & Promptable {
+  aiPromptSuggestion: String!
+  cards(after: String, before: String, first: Int, last: Int): CardConnection
+
+  """The ID of an object"""
+  id: ID!
+  name: String
+}
+
+type PlayerConnection {
+  edges: [PlayerEdge]
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type PlayerEdge {
+  cursor: String
+  node: Player
+}
+
+"""Options that can be used to filter a list of players"""
+input PlayersWith {
+  sport: Sport
+}
+
+"""Options that can be used to find a single player"""
+input PlayerWith {
+  id: ID
+  name: String
+  sport: Sport
+}
+
+"""A user's privacy settings"""
+type PrivacySettings {
+  showCollectionValueInApp: Boolean!
+  showCollectionValueOnWeb: Boolean!
+}
+
+"""A User's Profile"""
+type Profile implements Node {
+  avatarImageUrl: String
+
+  """Average ship time in days as seller"""
+  averageShipTime: Decimal
+  bio: String
+  createdAt: DateTime @deprecated(reason: "replaced by dateJoined")
+  dateJoined: DateTime
+  email: String!
+  emailStatus: String
+  flags: Json
+
+  """The set of profiles that are following me."""
+  followedBy(after: String, before: String, first: Int, last: Int, with: FollowedByWith): ProfileConnection
+
+  """The set of profiles that I am following."""
+  following(after: String, before: String, first: Int, last: Int, with: FollowingWith): ProfileConnection
+
+  """The ID of an object"""
+  id: ID!
+  isAmbassador: Boolean!
+  isAnonymous: Boolean!
+  isFeatured: Boolean!
+  lastActiveAt: DateTime
+  lastSessionAt: DateTime
+  location: String
+
+  """Information about the mobile app."""
+  mobileApp: MobileApp
+  mobileDevice: MobileDevice!
+  name: String
+  numberOfCardsSold: Int!
+
+  """Information about how we're willing to ship Orders."""
+  orderShipmentDetails: ProfileOrderShipmentDetails
+  ratingAsABuyer: OrderRating!
+  ratingAsASeller: OrderRating!
+  recentActivity(limit: Int): [Activity!]!
+
+  """All my sets"""
+  sets(after: String, before: String, first: Int, last: Int, with: SetsWith): SetConnection
+  socialMedia: [SocialMediaLink!]!
+  status: String
+  subscriptionExpirationDate: Date
+
+  """What types of cards are in this user's collection?"""
+  tradingCardTypes: TradingCardTypes
+
+  """All my cards"""
+  tradingCards(after: String, before: String, excludeIds: [ID], first: Int, last: Int, orderBy: [TradingCardOrder!], with: TradingCardsWith = {states: [LISTED, ACCEPTING_OFFERS, NOT_FOR_SALE, UNIDENTIFIED]}): TradingCardConnection
+  type: String
+  username: String
+
+  """Information about this user, from the viewer's perspective."""
+  viewer: ProfileViewer!
+}
+
+type ProfileConnection {
+  count: Int
+  edges: [ProfileEdge]
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type ProfileEdge {
+  cursor: String
+  node: Profile
+}
+
+"""
+Some basic detauls describing how this person is willing to ship orders
+"""
+type ProfileOrderShipmentDetails {
+  description: String!
+  hasShippingAddress: Boolean
+  paidBy: ProfileOrderShipmentDetailsPaidBy!
+  sellerDiscount: DealSellerDiscount
+  sellerMinimum: Int
+  shippingLabelGeneratedBy: ProfileOrderShipmentDetailsShippingLabelGeneratedBy!
+}
+
+enum ProfileOrderShipmentDetailsPaidBy {
+  BUYER
+  SELLER
+}
+
+enum ProfileOrderShipmentDetailsShippingLabelGeneratedBy {
+  COLLX
+  ME
+}
+
+"""allowed values for the profilesToFollow connection's order_by argument"""
+enum ProfilesToFollowOrder {
+  """orders by the most recently created users first"""
+  NEWEST_FIRST
+
+  """orders in a repeatably random sequence unique to the current user"""
+  RANDOM
+}
+
+type ProfileViewer {
+  """The active deal with this buyer, if any"""
+  activeDealWithBuyer: Deal
+
+  """The active deal with this seller, if any"""
+  activeDealWithSeller: Deal
+  amIAcceptingNotificationsFromThem: Boolean!
+  amIBlockingThem: Boolean!
+  amIFollowingThem: Boolean!
+  areTheyBlockingMe: Boolean!
+  areTheyFollowingMe: Boolean!
+  canISeeCollectionValueInApp: Boolean!
+  canISeeCollectionValueOnWeb: Boolean!
+
+  """Is this *my* profile?"""
+  isMe: Boolean!
+  isMyEmailVerified: Boolean!
+  myEmailStatus: EmailStatusType!
+}
+
+input ProfileWith {
+  email: String
+  id: ID
+  username: String
+}
+
+input ProfileWithInput {
+  id: ID!
+}
+
+interface Promptable {
+  """A suggested AI prompt for this type"""
+  aiPromptSuggestion: String!
+}
+
+type RecentSales {
+  all(after: String, before: String, first: Int, last: Int, with: SingleCardSalesWith = {excludeFlagged: true}): SingleCardSaleConnection
+  byCondition: [RecentSalesByCondition]!
+}
+
+type RecentSalesByCondition {
+  condition: CardCondition!
+  sales: [SingleCardSale!]!
+}
+
+"""A recent search"""
+type RecentSearch implements Node {
+  at: DateTime!
+
+  """The ID of an object"""
+  id: ID!
+  keywords: String
+}
+
+type RecentSearchConnection {
+  edges: [RecentSearchEdge]
+  pageInfo: PageInfo!
+}
+
+type RecentSearchEdge {
+  cursor: String
+  node: RecentSearch
+}
+
+"""Recommendations"""
+type Recommendations implements Node {
+  """The ID of an object"""
+  id: ID!
+
+  """Listed Trading Cards that may be of interest."""
+  listedTradingCards(after: String, before: String, first: Int, last: Int, with: TradingCardsWith): TradingCardConnection
+
+  """Profiles to follow."""
+  profilesToFollow(after: String, before: String, first: Int, last: Int, orderBy: ProfilesToFollowOrder = RANDOM): ProfileConnection
+
+  """Activity of the profiles I'm following."""
+  recentActivity(after: String, before: String, first: Int, last: Int, with: ActivityWith): ActivityConnection
+}
+
+type RedemptionCode {
+  actions: [RedemptionCodeAction!]
+  code: String!
+  redeemedAt: DateTime
+  redeemedBy: Profile
+}
+
+union RedemptionCodeAction = GrantCreditAction
+
+"""Refer 5 Friends"""
+type ReferralProgramRefer {
+  claimed: Boolean!
+  mailingAddress: String!
+  redemptions: [ReferralProgramReferRedemption]
+  referrals: [ReferralProgramReferRedemption]
+  remainingRedemptions: Int!
+  selectedReward: ReferralProgramReferPackReward
+  shareableCode: String!
+}
+
+type ReferralProgramReferPackReward {
+  sport: String
+}
+
+type ReferralProgramReferRedemption {
+  profile: Profile
+  state: ReferralState!
+}
+
+enum ReferralState {
+  APPROVED
+  FLAGGED
+  PENDING
+}
+
+input RejectOfferFromInput {
+  buyerId: ID
+  sellerId: ID
+}
+
+input RejectOfferInput {
+  from: RejectOfferFromInput!
+}
+
+type RejectOfferPayload {
+  deal: Deal
+  errors: [ErrorMessage!]
+  success: Boolean!
+}
+
+input RemoveCardsFromSellersCollectionInput {
+  orderId: ID!
+}
+
+type RemoveCardsFromSellersCollectionPayload {
+  errors: [ErrorMessage!]
+  order: Order
+  success: Boolean!
+}
+
+input RemoveIssueAttachmentsFromIssueInput {
+  issueAttachmentIds: [ID!]!
+  with: RemoveIssueAttachmentsFromIssueWithInput!
+}
+
+type RemoveIssueAttachmentsFromIssuePayload {
+  errors: [ErrorMessage!]
+  issue: Issue
+  success: Boolean!
+}
+
+input RemoveIssueAttachmentsFromIssueWithInput {
+  issueId: ID!
+}
+
+input RemoveTradingCardsFromDealInput {
+  addToDeal: Boolean = false
+  tradingCardIds: [ID!]!
+  with: RemoveTradingCardsFromDealWithInput!
+}
+
+type RemoveTradingCardsFromDealPayload {
+  deal: Deal
+  errors: [ErrorMessage!]
+  success: Boolean!
+}
+
+input RemoveTradingCardsFromDealWithInput {
+  sellerId: ID!
+}
+
+input RemoveTradingCardsFromSavedForLaterInput {
+  addToDeal: Boolean = false
+  tradingCardIds: [ID!]!
+}
+
+type RemoveTradingCardsFromSavedForLaterPayload {
+  errors: [ErrorMessage!]
+  numberOfItemsRemaining: Int
+  success: Boolean!
+}
+
+input RenewDealInput {
+  dealId: ID
+}
+
+type RenewDealPayload {
+  deal: Deal
+  errors: [ErrorMessage!]
+  success: Boolean!
+}
+
+type RepliedToCommentActivity implements Activity & Node {
+  at: DateTime!
+  comment: Comment
+  featured: Boolean!
+
+  """The ID of an object"""
+  id: ID!
+  tradingCard: TradingCard
+  who: Profile!
+}
+
+type RootMutationType {
+  """Accept an offer from a buyer or seller for active deal."""
+  acceptOffer(input: AcceptOfferInput!): AcceptOfferPayload
+
+  """Copy the Trading Cards from given Order to Buyer's collection"""
+  addCardsFromOrderToCollection(input: AddCardsFromOrderToCollectionInput!): AddCardsFromOrderToCollectionPayload
+
+  """Add issue attachments to an issue."""
+  addIssueAttachmentsToIssue(input: AddIssueAttachmentsToIssueInput!): AddIssueAttachmentsToIssuePayload
+
+  """Add an Issue Note to an Issue"""
+  addIssueNote(input: AddIssueNoteInput!): AddIssueNotePayload
+
+  """Add trading cards to an active deal with another person."""
+  addTradingCardsToDeal(input: AddTradingCardsToDealInput!): AddTradingCardsToDealPayload
+
+  """Add trading cards to the caller's saved-for-later list."""
+  addTradingCardsToSavedForLater(input: AddTradingCardsToSavedForLaterInput!): AddTradingCardsToSavedForLaterPayload
+
+  """Assign an Issue to a User"""
+  assignIssue(input: AssignIssueInput!): AssignIssuePayload
+
+  """
+  Buy the contents of an existing deal with a seller. If the seller offers discounts, those are applied.
+  """
+  buyItNow(input: BuyItNowInput!): BuyItNowPayload
+
+  """Cancel an active deal with another person."""
+  cancelDeal(input: CancelDealInput!): CancelDealPayload
+
+  """Cancel an active order with another person."""
+  cancelOrder(input: CancelOrderInput!): CancelOrderPayload
+
+  """
+  Process an Order for checkout. If payment is completely covered by credit or balance
+  then we can proceed to the seller's shipment details. Otherwise, if a balance remains,
+  we'll need to create a payment intent with stripe for the balance of funds. In that
+  event, we'll delay further processing of the order until Stripe informs us that the
+  payment has been made / authorized.
+  """
+  checkoutOrder(input: CheckoutOrderInput!): CheckoutOrderPayload
+
+  """Clear the PENDING flag for a set of Trading Cards"""
+  clearPendingFlagForTradingCards(input: ClearPendingFlagForTradingCardsInput!): ClearPendingFlagForTradingCardsPayload
+
+  """Close an existing Issue"""
+  closeIssue(input: CloseIssueInput!): CloseIssuePayload
+
+  """Initiate actual refund process for an Order's ledgers and Stripe"""
+  completeRefundOnOrder(input: CompleteRefundOnOrderInput!): CompleteRefundOnOrderPayload
+
+  """Create a new Address"""
+  createAddress(input: CreateAddressInput!): CreateAddressPayload
+
+  """Create a new Comment"""
+  createComment(input: CreateCommentInput!): CreateCommentPayload
+
+  """Create a new Issue"""
+  createIssue(input: CreateIssueInput!): CreateIssuePayload
+
+  """Create a new Issue Attachment"""
+  createIssueAttachment(input: CreateIssueAttachmentInput!): CreateIssueAttachmentPayload
+
+  """Create a new Notification"""
+  createNotification(input: CreateNotificationInput!): CreateNotificationPayload
+
+  """Create a new Address"""
+  createOrUpdateInstallation(input: CreateOrUpdateInstallationInput!): CreateOrUpdateInstallationPayload
+
+  """Create an order from an existing deal."""
+  createOrder(input: CreateOrderInput!): CreateOrderPayload
+
+  """Initiate refund process for an Order"""
+  createRefundOnOrder(input: CreateRefundOnOrderInput!): CreateRefundOnOrderPayload
+
+  """Create a Stripe connected account to user"""
+  createStripeConnectedAccount(input: CreateStripeConnectedAccountInput!): CreateStripeConnectedAccountPayload
+
+  """Create a new Trading Card"""
+  createTradingCard(input: CreateTradingCardInput!): CreateTradingCardPayload
+
+  """Delete an existing Address"""
+  deleteAddress(input: DeleteAddressInput!): DeleteAddressPayload
+
+  """Delete a Comment"""
+  deleteComment(input: DeleteCommentInput!): DeleteCommentPayload
+
+  """Delete a Notification"""
+  deleteNotification(input: DeleteNotificationInput!): DeleteNotificationPayload
+
+  """Delete set of (or all) SavedSearches"""
+  deleteSavedSearch(input: DeleteSavedSearchInput!): DeleteSavedSearchPayload
+
+  """Delete an existing set of Trading Cards"""
+  deleteTradingCards(input: DeleteTradingCardsInput!): DeleteTradingCardsPayload
+
+  """Remove the sale listing for the given Trading Card"""
+  delistTradingCard(input: DelistTradingCardInput!): DelistTradingCardPayload
+
+  """Dislike a Trading Card, Comment, etc."""
+  dislike(input: DislikeInput!): DislikePayload
+
+  """Get or create a new Profile"""
+  getOrCreateProfile(input: GetOrCreateProfileInput!): GetOrCreateProfilePayload
+
+  """Grant a credit to the given Profile"""
+  grantCredit(input: GrantCreditInput!): GrantCreditPayload
+
+  """Sets and returns an email verification token for the user."""
+  initiateEmailVerification: InitiateEmailVerificationPayload
+
+  """Like a Trading Card, Comment, etc."""
+  like(input: LikeInput!): LikePayload
+
+  """List a Trading Card for sale, at the given asking price"""
+  listTradingCard(input: ListTradingCardInput!): ListTradingCardPayload
+
+  """
+  Make an offer on an active deal to a buyer or a seller, implictly cancelling any previous offer.
+  """
+  makeAnOffer(input: MakeAnOfferInput!): MakeAnOfferPayload
+
+  """Mark an Order as completed"""
+  markOrderAsCompleted(input: MarkOrderAsCompletedInput!): MarkOrderAsCompletedPayload
+
+  """Mark order as shipped"""
+  markOrderAsShipped(input: MarkOrderAsShippedInput!): MarkOrderAsShippedPayload
+
+  """Mark all Notifications as Read"""
+  markReadAllNotification: MarkReadAllNotificationPayload
+
+  """Mark a Notification as Read"""
+  markReadNotification(input: MarkReadNotificationInput!): MarkReadNotificationPayload
+
+  """Mark a Return as delivered (by seller)"""
+  markReturnAsDelivered(input: MarkReturnAsDeliveredInput!): MarkReturnAsDeliveredPayload
+
+  """Mark a Trading Card as featured"""
+  markTradingCardAsFeatured(input: MarkTradingCardAsFeaturedInput!): MarkTradingCardAsFeaturedPayload
+
+  """Mark a Trading Card as unfeatured"""
+  markTradingCardAsUnfeatured(input: MarkTradingCardAsUnfeaturedInput!): MarkTradingCardAsUnfeaturedPayload
+
+  """Claim onboarding credit"""
+  marketingClaimOnboardingCredit: MarketingClaimOnboardingCreditPayload
+
+  """Reject an offer from a buyer or seller for active deal."""
+  rejectOffer(input: RejectOfferInput!): RejectOfferPayload
+
+  """Removes cards from sellers collection for order"""
+  removeCardsFromSellersCollection(input: RemoveCardsFromSellersCollectionInput!): RemoveCardsFromSellersCollectionPayload
+
+  """Remove issue attachments from an issue."""
+  removeIssueAttachmentsFromIssue(input: RemoveIssueAttachmentsFromIssueInput!): RemoveIssueAttachmentsFromIssuePayload
+
+  """Remove trading cards from an active deal with another person."""
+  removeTradingCardsFromDeal(input: RemoveTradingCardsFromDealInput!): RemoveTradingCardsFromDealPayload
+
+  """Remove trading cards from the caller's saved-for-later list."""
+  removeTradingCardsFromSavedForLater(input: RemoveTradingCardsFromSavedForLaterInput!): RemoveTradingCardsFromSavedForLaterPayload
+
+  """Renew a cancelled or deal with another person."""
+  renewDeal(input: RenewDealInput!): RenewDealPayload
+
+  """Save a search query, optionally specifying a set of topics or a source"""
+  saveSearch(input: SaveSearchInput!): SaveSearchPayload
+
+  """Set an amount of the User's balance to be applied to an order."""
+  setBalanceToApplyToOrder(input: SetBalanceToApplyToOrderInput!): SetBalanceToApplyToOrderPayload
+
+  """Set a Seller Discount of Seller Settings"""
+  setCreditsToApplyToOrder(input: SetCreditsToApplyToOrderInput!): SetCreditsToApplyToOrderPayload
+
+  """Set a default address for this Profile"""
+  setDefaultAddress(input: SetDefaultAddressInput!): SetDefaultAddressPayload
+
+  """Sets a given users email status."""
+  setEmailStatus(input: SetEmailStatusInput!): SetEmailStatusPayload
+
+  """Set a rating on the given Order"""
+  setRatingOnOrder(input: SetRatingOnOrderInput!): SetRatingOnOrderPayload
+
+  """Set a Accept Offer of Seller Settings"""
+  setSellerAcceptOffer(input: SetSellerAcceptOfferInput!): SetSellerAcceptOfferPayload
+
+  """Set a Seller Discount of Seller Settings"""
+  setSellerDiscount(input: SetSellerDiscountInput!): SetSellerDiscountPayload
+
+  """Set a Shipping Settings of Seller Settings"""
+  setSellerShippingSettings(input: SetSellerShippingSettingsInput!): SetSellerShippingSettingsPayload
+
+  """Set a Taxpayer Information of Seller Settings"""
+  setSellerTaxpayerInformation(input: SetSellerTaxpayerInformationInput!): SetSellerTaxpayerInformationPayload
+
+  """Set a Seller Discount of Seller Settings"""
+  setShippingAddress(input: SetShippingAddressInput!): SetShippingAddressPayload
+
+  """Set a Stripe payment method on Order"""
+  setStripePaymentMethod(input: SetStripePaymentMethodInput!): SetStripePaymentMethodPayload
+
+  """Set a Tracking Number on the given order Order"""
+  setTrackingNumberOnOrder(input: SetTrackingNumberOnOrderInput!): SetTrackingNumberOnOrderPayload
+
+  """Sets privacy settings for the user"""
+  setUserPrivacySettings(input: SetUserPrivacySettingsInput!): SetUserPrivacySettingsPayload
+
+  """Remove the sale listing for the given Trading Card"""
+  soldTradingCard(input: SoldTradingCardInput!): SoldTradingCardPayload
+
+  """Start following the activities of something (a Profile, etc.)"""
+  startFollowing(input: StartFollowingInput!): StartFollowingPayload
+
+  """Stop following the activities of something (a Profile, etc.)"""
+  stopFollowing(input: StopFollowingInput!): StopFollowingPayload
+
+  """Update an existing Address"""
+  updateAddress(input: UpdateAddressInput!): UpdateAddressPayload
+
+  """Update an existing Comment"""
+  updateComment(input: UpdateCommentInput!): UpdateCommentPayload
+
+  """Update an existing Issue"""
+  updateIssue(input: UpdateIssueInput!): UpdateIssuePayload
+
+  """Update an existing Notification"""
+  updateNotification(input: UpdateNotificationInput!): UpdateNotificationPayload
+
+  """Update a Profile"""
+  updateProfile(input: UpdateProfileInput!): UpdateProfilePayload
+
+  """Update an existing Set"""
+  updateSet(input: UpdateSetInput!): UpdateSetPayload
+
+  """Update a Stripe connected account to user"""
+  updateStripeConnectedAccount(input: UpdateStripeConnectedAccountInput!): UpdateStripeConnectedAccountPayload
+
+  """Update an existing Trading Card"""
+  updateTradingCard(input: UpdateTradingCardInput!): UpdateTradingCardPayload
+
+  """Update the images for a Trading Card"""
+  updateTradingCardImage(input: UpdateTradingCardImageInput!): UpdateTradingCardImagePayload
+
+  """Update user password"""
+  updateUserPassword(input: UpdateUserPasswordInput!): UpdateUserPasswordPayload
+
+  """Sets a given user's username value."""
+  updateUsername(input: UpdateUsernameInput!): UpdateUsernamePayload @deprecated(reason: "use updateProfile")
+
+  """Use a redemption code"""
+  useRedemptionCode(input: UseRedemptionCodeInput!): UseRedemptionCodePayload
+
+  """Verfies a given users email."""
+  verifyEmail(input: VerifyEmailInput!): VerifyEmailPayload
+
+  """Reedem amount in currency to Stripe external account ID"""
+  withdrawMoney(input: WithdrawMoneyInput!): WithdrawMoneyPayload
+}
+
+type RootQueryType {
+  """Find cards by searching with various criteria"""
+  allCards(after: String, before: String, first: Int, last: Int, orderBy: [CardOrder!], with: CardsWith): CardConnection
+  allCharacters(after: String, before: String, first: Int, last: Int, with: CharactersWith): CharacterConnection
+
+  """All grading scales"""
+  allGradingScales: [GradingScale!]!
+
+  """Find Issues by searching with various criteria"""
+  allIssues(after: String, before: String, first: Int, last: Int, orderBy: [IssuesOrder!], with: IssuesWith): IssueConnection
+
+  """Find Notifications by searching with various criteria"""
+  allNotifications(after: String, before: String, first: Int, last: Int, with: NotificationsWith): NotificationConnection
+
+  """Find Orders by searching with various criteria"""
+  allOrders(after: String, before: String, first: Int, last: Int, orderBy: [AllOrdersOrder!] = [UPDATED_AT_DESC], with: OrdersWith): OrderConnection
+  allPlayers(after: String, before: String, first: Int, last: Int, with: PlayersWith): PlayerConnection
+
+  """Find scan by searching with various criteria"""
+  allScans(after: String, before: String, first: Int, last: Int, with: ScansWith): ScanConnection
+
+  """Search through all sets"""
+  allSets(after: String, before: String, first: Int, last: Int, with: SetsWith): SetConnection
+
+  """Search through all teams"""
+  allTeams(after: String, before: String, first: Int, last: Int, with: TeamsWith): TeamConnection
+  allTradingCards(after: String, before: String, first: Int, last: Int, orderBy: [TradingCardOrder!], with: TradingCardsWith): TradingCardConnection
+
+  """Find Withdrawals by searching with various criteria"""
+  allWithdrawals(after: String, before: String, first: Int, last: Int, orderBy: [AllWithdrawalsOrder!] = [UPDATED_AT_DESC]): WithdrawalConnection
+
+  """Find a card"""
+  card(with: CardWith): Card
+  character(with: CharacterWith!): Character
+
+  """Find a deal"""
+  deal(with: DealWith): Deal
+
+  """Find an Issue"""
+  issue(with: IssueWith): Issue
+  node(
+    """The ID of an object."""
+    id: ID!
+  ): Node
+
+  """Find a Notification"""
+  notification(with: NotificationWith): Notification
+
+  """Find an Order"""
+  order(with: OrderWith!): Order
+  player(with: PlayerWith!): Player
+
+  """Find a profile"""
+  profile(with: ProfileWith): Profile
+
+  """Search with various criteria"""
+  search(keywords: String): Search
+
+  """Find a specific set"""
+  set(with: SetWith!): Set
+
+  """Find a specific team"""
+  team(with: TeamWith!): Team
+
+  """Find a trading card"""
+  tradingCard(with: TradingCardWith): TradingCard
+
+  """Who am I?"""
+  viewer: Viewer!
+
+  """Find an Withdrawal"""
+  withdrawal(with: WithdrawalWith!): Withdrawal
+}
+
+type RootSubscriptionType {
+  dealChanged(id: ID!): Deal
+  orderChanged(id: ID!): Order
+  profileChanged(id: ID!): Profile
+}
+
+"""
+A list of trading cards that have been saved-for-later for a given seller.
+"""
+type SavedForLater {
+  numberOfTradingCards: Int!
+
+  """The seller who's cards we're saving for later."""
+  seller: Profile!
+
+  """A connection to the cards that have been saved for later."""
+  tradingCards(after: String, before: String, first: Int, last: Int): TradingCardConnection
+}
+
+type SavedForLaterConnection {
+  edges: [SavedForLaterEdge]
+  pageInfo: PageInfo!
+}
+
+type SavedForLaterEdge {
+  cursor: String
+  node: SavedForLater
+}
+
+type SavedSearch implements Node {
+  """The ID of an object"""
+  id: ID!
+  query: String!
+  source: SavedSearchSource
+  topics: [SavedSearchTopic]
+}
+
+type SavedSearchConnection {
+  edges: [SavedSearchEdge]
+  pageInfo: PageInfo!
+}
+
+type SavedSearchEdge {
+  cursor: String
+  node: SavedSearch
+}
+
+enum SavedSearchSource {
+  CAMERA
+  COLLECTION
+  DEFAULT
+}
+
+enum SavedSearchTopic {
+  CARD
+  PLAYER
+  TEAM
+  TRADING_CARD
+}
+
+input SaveSearchInput {
+  """The search query to save"""
+  query: String!
+
+  """The source of the search query"""
+  source: SavedSearchSource
+
+  """The topics related to the search query"""
+  topics: [SavedSearchTopic] = []
+}
+
+type SaveSearchPayload {
+  errors: [ErrorMessage!]
+  savedSearch: SavedSearch
+  success: Boolean!
+}
+
+"""The results of a visual search"""
+type Scan implements Node {
+  cards: [Card!]!
+  createdAt: DateTime
+  guid: String
+
+  """The ID of an object"""
+  id: ID!
+  imageId: Int!
+  imageUrl: String!
+  platform: String!
+  source: String!
+  type: Int!
+  user: Profile!
+}
+
+type ScanConnection {
+  edges: [ScanEdge]
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type ScanEdge {
+  cursor: String
+  node: Scan
+}
+
+"""Options that can be used to filter a list of scan"""
+input ScansWith {
+  guid: String
+  platform: String
+  scannedById: ID
+  source: String
+  type: Int
+}
+
+type Search implements Node {
+  """Search for Articles"""
+  articles(after: String, before: String, first: Int, last: Int, with: SearchArticlesWith): ArticleConnection
+
+  """Search for Canonical Cards"""
+  cards(after: String, before: String, first: Int, last: Int, orderBy: [SearchCardsOrder], with: SearchCardsWith): CardConnection
+
+  """The ID of an object"""
+  id: ID!
+
+  """Search for Listed Trading Cards"""
+  listedTradingCards(after: String, before: String, first: Int, last: Int, orderBy: [SearchListedTradingCardsOrder], with: SearchListedTradingCardsWith): TradingCardConnection
+
+  """Search for Profiles"""
+  profiles(after: String, before: String, first: Int, last: Int, orderBy: [SearchProfilesOrder!], with: SearchProfilesWith): ProfileConnection
+
+  """Search for Suggestions"""
+  suggestions(after: String, before: String, first: Int, last: Int, with: SearchSuggestionsWith): SearchSuggestionConnection
+}
+
+input SearchArticlesWith {
+  source: String
+  title: String
+}
+
+enum SearchCardsOrder {
+  HIGHEST_PRICE
+  LOWEST_PRICE
+  NEWEST_FIRST
+  OLDEST_FIRST
+}
+
+input SearchCardsWith {
+  game: Game
+  gameFlags: [SearchGameFlagsWith]
+  sport: Sport
+  sportFlags: [SearchSportFlagsWith]
+  year: Int
+}
+
+input SearchGameFlagsWith {
+  flag: GameCardFlag!
+  presence: Boolean!
+}
+
+enum SearchListedTradingCardsOrder {
+  HIGHEST_PRICE
+  LOWEST_PRICE
+  NEWEST_FIRST
+}
+
+input SearchListedTradingCardsWith {
+  acceptingOffers: Boolean
+  conditions: [String]
+  freeShipping: Boolean
+  game: Game
+  gameFlags: [SearchGameFlagsWith]
+  graded: Boolean
+  grader: String
+  grades: [Int]
+  sellerDiscount: Boolean
+  sport: Sport
+  sportFlags: [SearchSportFlagsWith]
+  year: Int
+}
+
+enum SearchProfilesOrder {
+  N_FOLLOWERS_DESC
+  N_TRADING_CARDS_DESC
+}
+
+input SearchProfilesWith {
+  isAcceptingOffers: Boolean
+  isDiscountingForQuantity: Boolean
+  isShippingFree: Boolean
+  status: SearchProfilesWithStatus
+}
+
+enum SearchProfilesWithStatus {
+  ACTIVE
+  BANNED
+  INACTIVE
+}
+
+input SearchSportFlagsWith {
+  flag: SportCardFlag!
+  presence: Boolean!
+}
+
+union SearchSuggestion = Character | Player | Set | Team
+
+type SearchSuggestionConnection {
+  edges: [SearchSuggestionEdge]
+  pageInfo: PageInfo!
+}
+
+type SearchSuggestionEdge {
+  cursor: String
+  node: SearchSuggestion
+}
+
+input SearchSuggestionsWith {
+  game: Game
+  sport: Sport
+}
+
+"""An Seller Setting"""
+type SellerSettings implements Node {
+  """
+  When set `true` card buyers can submit custom price offers to the card owner as deals.
+  When set `false` buyers can only buy the card of interest with the set asking price.
+  """
+  acceptOffer: Boolean
+
+  """Name And Address"""
+  address: Address
+
+  """Buyer Pays Shipping"""
+  buyerPaysShipping: Boolean
+
+  """Discount"""
+  discount: Int
+
+  """The ID of an object"""
+  id: ID!
+
+  """Seller minimum order amount"""
+  minimum: Int
+
+  """Packing Slip"""
+  packingSlip: Boolean
+
+  """Seller Type"""
+  sellerType: SellerType
+
+  """Shipping Cost"""
+  shippingCost: Int
+
+  """Shipping Info"""
+  shippingInfo: String
+
+  """Who is responsible for creating the shipping label?"""
+  shippingLabelGeneratedBy: ShippingLabelGeneratedBy
+
+  """Label size"""
+  shippingLabelSize: ShippingLabelSize
+
+  """What type of packaging is the seller using by default?"""
+  shippingPackageType: ShippingPackageType
+  shippingWeightForGradedCards(precision: Int = 2, unit: UnitOfMeasureForWeight = OUNCE): Weight
+  shippingWeightForRawCards(precision: Int = 2, unit: UnitOfMeasureForWeight = OUNCE): Weight
+
+  """Social Security Number"""
+  ssn: String
+
+  """Threshold"""
+  threshold: Int
+
+  """Taxpayer Identification Number"""
+  tin: String
+}
+
+enum SellerType {
+  BUSINESS
+  INDIVIDUAL
+}
+
+"""A set of cards"""
+type Set implements Node & Promptable {
+  aiPromptSuggestion: String!
+
+  """All of the cards that belong to this set"""
+  cards(after: String, before: String, first: Int, last: Int, orderBy: [CardOrder!], with: CardsWith): CardConnection
+  commonPriceOverride: Money
+  hints: String
+
+  """The ID of an object"""
+  id: ID!
+  name: String
+  numberOfCards: Int
+  parent: Set
+  subset: String
+  subsets: [Set!]!
+  viewer(asProfile: ID): SetViewer!
+  year: Int
+}
+
+input SetBalanceToApplyToOrderInput {
+  orderId: ID!
+  value: MoneyInput
+}
+
+type SetBalanceToApplyToOrderPayload {
+  errors: [ErrorMessage!]
+  order: Order
+  success: Boolean!
+}
+
+type SetConnection {
+  edges: [SetEdge]
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+input SetCreditsToApplyToOrderInput {
+  orderId: ID!
+  value: MoneyInput
+}
+
+type SetCreditsToApplyToOrderPayload {
+  errors: [ErrorMessage!]
+  order: Order
+  success: Boolean!
+}
+
+input SetDefaultAddressInput {
+  addressId: ID
+}
+
+type SetDefaultAddressPayload {
+  errors: [ErrorMessage!]
+  success: Boolean!
+  viewer: Viewer
+}
+
+type SetEdge {
+  cursor: String
+  node: Set
+}
+
+input SetEmailStatusInput {
+  emailStatus: EmailStatusType!
+  userId: ID!
+}
+
+type SetEmailStatusPayload {
+  errors: [ErrorMessage!]
+  success: Boolean!
+}
+
+input SetRatingOnOrderInput {
+  orderId: ID!
+  rating: Int!
+}
+
+type SetRatingOnOrderPayload {
+  errors: [ErrorMessage!]
+  order: Order
+  success: Boolean!
+}
+
+input SetSellerAcceptOfferInput {
+  acceptOffer: Boolean
+}
+
+type SetSellerAcceptOfferPayload {
+  errors: [ErrorMessage!]
+  sellerSettings: SellerSettings
+  success: Boolean!
+}
+
+input SetSellerDiscountInput {
+  discount: Int
+  threshold: Int
+}
+
+type SetSellerDiscountPayload {
+  errors: [ErrorMessage!]
+  sellerSettings: SellerSettings
+  success: Boolean!
+}
+
+input SetSellerShippingSettingsInput {
+  buyerPaysShipping: Boolean
+  minimum: Int
+  packingSlip: Boolean
+  shippingCost: Int
+  shippingInfo: String
+  shippingLabelGeneratedBy: ShippingLabelGeneratedBy
+  shippingLabelSize: ShippingLabelSize
+  shippingPackageType: ShippingPackageType
+  shippingWeightForGradedCards: WeightInput
+  shippingWeightForRawCards: WeightInput
+}
+
+type SetSellerShippingSettingsPayload {
+  errors: [ErrorMessage!]
+  sellerSettings: SellerSettings
+  success: Boolean!
+}
+
+input SetSellerTaxpayerInformationInput {
+  sellerType: SellerType
+  ssn: String
+  tin: String
+  with: SetSellerTaxpayerInformationWithInput!
+}
+
+type SetSellerTaxpayerInformationPayload {
+  errors: [ErrorMessage!]
+  sellerSettings: SellerSettings
+  success: Boolean!
+}
+
+input SetSellerTaxpayerInformationWithInput {
+  addressId: ID
+}
+
+input SetShippingAddressInput {
+  addressId: ID!
+  orderId: ID!
+}
+
+type SetShippingAddressPayload {
+  errors: [ErrorMessage!]
+  order: Order
+  success: Boolean!
+}
+
+input SetStripePaymentMethodInput {
+  orderId: ID!
+  stripePaymentMethod: ID
+}
+
+type SetStripePaymentMethodPayload {
+  errors: [ErrorMessage!]
+  order: Order
+  success: Boolean!
+}
+
+"""Options that can be used to filter a list of sets"""
+input SetsWith {
+  game: Game
+  name: String
+  sport: Sport
+  tradingCard: SetsWithTradingCardsWith
+  year: Int
+}
+
+"""
+Options that can be used to filter a list of sets based on the trading cards it contains
+"""
+input SetsWithTradingCardsWith {
+  brand: BrandWith
+  condition: CardConditionWith
+  keywords: String
+  player: PlayerWith
+  states: [TradingCardState!]
+  team: TeamWith
+}
+
+input SetTrackingNumberOnOrderInput {
+  orderId: ID!
+  trackingNumber: String
+}
+
+type SetTrackingNumberOnOrderPayload {
+  errors: [ErrorMessage!]
+  order: Order
+  success: Boolean!
+}
+
+input SetUserPrivacySettingsInput {
+  showCollectionValueInApp: Boolean
+  showCollectionValueOnWeb: Boolean
+}
+
+type SetUserPrivacySettingsPayload {
+  errors: [ErrorMessage!]
+  privacySettings: PrivacySettings
+  success: Boolean!
+}
+
+"""My view of the Set"""
+type SetViewer implements Node {
+  """The ID of an object"""
+  id: ID!
+
+  """
+  Returns the number of cards represented within the viewer's collection for the
+  scoped set. Duplicates of cards are only counted once against the set member it represents.
+  """
+  numberOfCards: Int
+
+  """All my cards from this set"""
+  tradingCards(after: String, before: String, first: Int, last: Int, orderBy: [TradingCardOrder!], with: TradingCardsWith = {states: [LISTED, ACCEPTING_OFFERS, NOT_FOR_SALE, UNIDENTIFIED]}): TradingCardConnection
+}
+
+"""Options that can be used to find a single set"""
+input SetWith {
+  game: Game
+  id: ID
+  name: String
+  sport: Sport
+  year: Int
+}
+
+"""Details specific to shipment for an order"""
+type ShipmentDetails implements Node {
+  """The ID of an object"""
+  id: ID!
+  labelGeneratedBy: ShipmentDetailsLabelGeneratedBy
+  postageLabelUrl: String
+  trackingNumber: String
+  trackingUrl: String
+}
+
+enum ShipmentDetailsLabelGeneratedBy {
+  EASYPOST
+  LETTERTRACK
+  SELLER
+}
+
+enum ShippingLabelGeneratedBy {
+  COLLX
+  ME
+}
+
+enum ShippingLabelSize {
+  EIGHT_AND_A_HALF_BY_ELEVEN
+  FOUR_BY_SIX
+}
+
+enum ShippingPackageType {
+  ENVELOPE
+  PACKAGE
+}
+
+"""Details about the sale of a single card"""
+interface SingleCardSale {
+  card: Card!
+  condition: CardCondition
+  date: Date
+  id: ID
+  soldFor: Money
+}
+
+type SingleCardSaleConnection {
+  edges: [SingleCardSaleEdge]
+  pageInfo: PageInfo!
+}
+
+type SingleCardSaleEdge {
+  cursor: String
+  node: SingleCardSale
+}
+
+"""Options that can be used to filter a list of my-cards"""
+input SingleCardSalesWith {
+  card: CardWith
+  excludeFlagged: Boolean = true
+}
+
+type SocialMediaLink {
+  site: String!
+  userId: String!
+}
+
+input SocialMediaLinkInput {
+  site: String!
+  userId: String!
+}
+
+type SoldCardActivity implements Activity & Node {
+  at: DateTime!
+  featured: Boolean!
+
+  """The ID of an object"""
+  id: ID!
+  tradingCard: TradingCard
+  tradingCards(first: Int = 5): [TradingCard!]!
+  who: Profile!
+}
+
+input SoldTradingCardInput {
+  salePrice: MoneyInput
+  tradingCard: TradingCardWithInput!
+  type: SoldTradingCardType!
+}
+
+type SoldTradingCardPayload {
+  errors: [ErrorMessage!]
+  success: Boolean!
+  tradingCard: TradingCard
+}
+
+enum SoldTradingCardType {
+  COLLX
+  OTHER
+}
+
+"""The supported sports"""
+enum Sport {
+  BASEBALL
+  BASKETBALL
+  FOOTBALL
+  HOCKEY
+  MULTISPORT
+  SOCCER
+  WRESTLING
+}
+
+"""A sport card"""
+type SportCard implements Card & Node {
+  allMarketValues: [CardMarketValue]!
+  backImageUrl(format: CardImageFormat = FULL, usePlaceholderWhenAbsent: Boolean = true): String!
+  brand: Brand
+
+  """External URLs"""
+  externalUrls: CardExternalUrls!
+  flags: [SportCardFlag]
+  frontImageUrl(format: CardImageFormat = FULL): String
+
+  """The ID of an object"""
+  id: ID!
+
+  """The market value of a card, which depends on it's condition"""
+  marketValue(assumingCondition: String = "Very Good"): MarketValue
+  name: String!
+  note: String
+  number: String
+  player: Player
+  recentSales: RecentSales
+
+  """Is this card reported?"""
+  reported: Boolean
+  serialNumber: String
+  set: Set
+  shareUrl: String!
+  sport: Sport
+  team: Team
+  tradingCards(after: String, before: String, first: Int, last: Int, orderBy: [TradingCardOrder!], with: TradingCardsForCardsWith = {excludeAnonymousOwners: true, excludeBlockedOwners: true, states: [LISTED, ACCEPTING_OFFERS, NOT_FOR_SALE, UNIDENTIFIED]}): TradingCardConnection
+
+  """Information about this Card, from the viewer's perspective."""
+  viewer(asProfile: ID): CardViewer!
+  year: Int!
+}
+
+enum SportCardFlag {
+  """Autographed"""
+  AU
+
+  """Error"""
+  ERR
+
+  """Hall of Fame"""
+  HOF
+
+  """Memorabilia"""
+  MEM
+
+  """Rookie Card"""
+  RC
+
+  """Serial Numbered (see the serialNumber for the numeric value)"""
+  SN
+}
+
+input StartFollowingInput {
+  profile: ProfileWithInput
+}
+
+type StartFollowingPayload {
+  errors: [ErrorMessage!]
+  profile: Profile
+  success: Boolean!
+}
+
+input StopFollowingInput {
+  profile: ProfileWithInput
+}
+
+type StopFollowingPayload {
+  errors: [ErrorMessage!]
+  profile: Profile
+  success: Boolean!
+}
+
+"""A team"""
+type Team implements Node & Promptable {
+  aiPromptSuggestion: String!
+
+  """The ID of an object"""
+  id: ID!
+  name: String
+}
+
+type TeamConnection {
+  edges: [TeamEdge]
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type TeamEdge {
+  cursor: String
+  node: Team
+}
+
+"""Options that can be used to filter a list of teams"""
+input TeamsWith {
+  league: LeagueWith
+  sport: Sport
+}
+
+"""Options that can be used to find a single team"""
+input TeamWith {
+  league: LeagueWith
+  name: String
+  sport: Sport
+}
+
+enum TimelineItemReason {
+  CANCELLED_BY_BUYER
+  CANCELLED_BY_SELLER
+  NO_PAYMENT_RECEIVED
+}
+
+"""A physical instance of card"""
+type TradingCard implements Node {
+  """The active deal this card is a part of, if one exists."""
+  activeDeal: Deal
+
+  """When was this card added to my collection?"""
+  addedAt: DateTime!
+
+  """Has the card been autographed?"""
+  autographed: Boolean!
+
+  """An image of the back of the card"""
+  backImageUrl(format: CardImageFormat = FULL, usePlaceholderWhenAbsent: Boolean = true): String
+
+  """The capture type (aka camera option) used during a visual search"""
+  captureType: CaptureTypeOption!
+
+  """The canonical card"""
+  card: Card
+
+  """The number of the certification that this card has, if any"""
+  certificationNumber: String
+
+  """All comments about the card"""
+  comments(after: String, before: String, first: Int, last: Int): CommentConnection
+
+  """The condition of the card; determines the market value."""
+  condition: CardCondition
+
+  """Is this card featured?"""
+  featured: Boolean
+
+  """An image of the front of the card"""
+  frontImageUrl(format: CardImageFormat = FULL): String
+
+  """The ID of an object"""
+  id: ID!
+
+  """Information about likes from other users"""
+  likes: Likes
+
+  """If the card has been listed for sale, details are here"""
+  listing: TradingCardListing
+
+  """
+  The market value of the card, using the default condition if the card has none specified.
+  """
+  marketValue(defaultCondition: String = "Very Good"): MarketValue
+
+  """A freeform notes field for the user"""
+  notes: String
+
+  """The owner of this card"""
+  owner: Profile!
+
+  """Is this card available for all to see?"""
+  public: Boolean
+
+  """The date the card was purchased, if known."""
+  purchaseDate: Date
+
+  """The purchase price of the card, if known."""
+  purchasePrice: Money
+
+  """Is this card reported?"""
+  reported: Boolean
+
+  """If this card has been sold, details are here"""
+  sale: SingleCardSale
+
+  """An url for sharing this card"""
+  shareUrl: String!
+
+  """The current state of the card"""
+  state: TradingCardState!
+
+  """When was this card last changed?"""
+  updatedAt: DateTime!
+
+  """Information about this my-card, from the viewer's perspective."""
+  viewer: TradingCardViewer!
+}
+
+type TradingCardConnection {
+  askingPriceSpread: TradingCardPriceSpread
+  count(type: TradingCardCountType = TRADING_CARD): Int
+  edges: [TradingCardEdge]
+  marketValue: Money
+  pageInfo: PageInfo!
+  totalCount: Int
+  totalMarketValue: Money
+}
+
+enum TradingCardCountType {
+  CANONICAL_CARD
+  TRADING_CARD
+}
+
+type TradingCardEdge {
+  cursor: String
+  node: TradingCard
+}
+
+"""A listing for a single-card sale"""
+type TradingCardListing {
+  """The current asking price for the card"""
+  askingPrice: Money!
+}
+
+enum TradingCardOrder {
+  CONDITION
+  FEATURED
+  NEWEST_FIRST
+  NUMBER
+  OLDEST_FIRST
+  PLAYER_NAME
+  PRICE_HIGHEST_FIRST
+  PRICE_LOWEST_FIRST
+  SET_NAME
+  TEAM_NAME
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+  YEAR
+}
+
+type TradingCardPriceSpread {
+  max: Money
+  min: Money
+}
+
+"""Options that can be used to filter a list of trading cards"""
+input TradingCardsForCardsWith {
+  condition: CardConditionWith
+  excludeAnonymousOwners: Boolean = true
+  excludeBlockedOwners: Boolean = true
+  featured: Boolean
+  states: [TradingCardState!] = [LISTED, ACCEPTING_OFFERS, NOT_FOR_SALE, UNIDENTIFIED]
+}
+
+enum TradingCardSource {
+  CAMERA
+  LIBRARY
+  SEARCH
+  UPLOAD
+}
+
+"""The supported my-card sale states"""
+enum TradingCardState {
+  ACCEPTING_OFFERS
+  DELETED
+  LISTED
+  NOT_FOR_SALE
+  PENDING
+  SOLD
+  UNIDENTIFIED
+}
+
+"""Options that can be used to filter a list of trading cards"""
+input TradingCardsWith {
+  brand: BrandWith
+  condition: CardConditionWith
+  excludeIds: [ID]
+  featured: Boolean
+  game: Game
+  ids: [ID]
+  isGraded: Boolean
+  keywords: String
+  owner: ProfileWith
+  player: PlayerWith
+  set: SetWith
+  sport: Sport
+  states: [TradingCardState!]
+  team: TeamWith
+  year: Int
+}
+
+type TradingCardTypes {
+  games: [Game!]!
+  sports: [Sport!]!
+}
+
+type TradingCardViewer {
+  """An url that owners can use to upload a new back image"""
+  backImageUploadUrl: String
+
+  """
+  Can I add this card to a deal? True if the card in question is not part of a
+  completed deal and not part of another deal between these two users. False otherwise.
+  """
+  canAddToDeal: Boolean!
+
+  """
+  Can I buy this card, right now? True if the card in question is LISTED and the
+  card does not belong to the viewing user. False otherwise.
+  """
+  canBuyItNow: Boolean!
+
+  """Can I delete this card?"""
+  canDelete: Boolean!
+
+  """Can I make an offer to buy this card?"""
+  canMakeAnOffer: Boolean!
+
+  """Can I start a conversation about this card?"""
+  canStartConversation: Boolean!
+
+  """An url that owners can use to upload a new front image"""
+  frontImageUploadUrl: String
+
+  """Is this an anonymous profile?"""
+  isAnonymous: Boolean!
+
+  """Do I like this card?"""
+  isLikedByMe: Boolean!
+
+  """Is this *my* card?"""
+  isMine: Boolean!
+
+  """Is this card on the saved-for-later list?"""
+  isSavedForLater: Boolean!
+  myOrderWithThisCard: Order
+}
+
+"""Options that can be used to find a single trading card"""
+input TradingCardWith {
+  id: ID
+}
+
+input TradingCardWithInput {
+  id: ID!
+}
+
+enum UnitOfMeasureForWeight {
+  GRAM
+  OUNCE
+}
+
+input UpdateAddressInput {
+  addressId: ID!
+  with: UpdateAddressWithInput!
+}
+
+type UpdateAddressPayload {
+  address: Address
+  errors: [ErrorMessage!]
+  success: Boolean!
+}
+
+input UpdateAddressWithInput {
+  address1: String
+  address2: String
+  careOf: String
+  city: String
+  country: String
+  name: String
+  postalCode: String
+  state: String
+}
+
+input UpdateCommentInput {
+  text: String!
+  with: UpdateCommentWithInput!
+}
+
+type UpdateCommentPayload {
+  comment: Comment
+  errors: [ErrorMessage!]
+  success: Boolean!
+}
+
+input UpdateCommentWithInput {
+  commentId: ID!
+}
+
+input UpdateIssueInput {
+  issueId: ID!
+  with: UpdateIssueWithInput!
+}
+
+type UpdateIssuePayload {
+  errors: [ErrorMessage!]
+  issue: Issue
+  success: Boolean!
+}
+
+input UpdateIssueWithInput {
+  assignedToId: ID
+  category: IssueCategory
+  notes: String
+  state: IssueState
+  type: IssueType
+}
+
+type UpdateNotification implements Node & Notification {
+  at: DateTime!
+  expiresAt: Int
+
+  """The ID of an object"""
+  id: ID!
+  imageUrl: String
+  message: String
+  owner: Profile!
+  read: Boolean!
+  who: Profile
+}
+
+input UpdateNotificationInput {
+  notificationId: ID!
+  with: UpdateNotificationWithInput!
+}
+
+type UpdateNotificationPayload {
+  errors: [ErrorMessage!]
+  notification: Notification
+  success: Boolean!
+}
+
+input UpdateNotificationWithInput {
+  data: Json
+  expiresAt: Int
+  imageUrl: String
+  message: String
+  read: Boolean
+  type: NotificationType
+}
+
+input UpdateProfileInput {
+  bio: String
+  email: String
+  location: String
+  name: String
+  socialMedia: [SocialMediaLinkInput!]
+  username: String
+}
+
+type UpdateProfilePayload {
+  errors: [ErrorMessage!]
+  profile: Profile
+  success: Boolean!
+}
+
+input UpdateSetInput {
+  setId: ID!
+  with: UpdateSetWithInput!
+}
+
+type UpdateSetPayload {
+  errors: [ErrorMessage!]
+  set: Set
+  success: Boolean!
+}
+
+input UpdateSetWithInput {
+  commonPriceOverride: MoneyInput
+}
+
+input UpdateStripeConnectedAccountCompanyInput {
+  companyName: String!
+}
+
+input UpdateStripeConnectedAccountIndividualInput {
+  firstName: String!
+  lastName: String!
+}
+
+input UpdateStripeConnectedAccountInput {
+  company: UpdateStripeConnectedAccountCompanyInput
+  individual: UpdateStripeConnectedAccountIndividualInput
+}
+
+type UpdateStripeConnectedAccountPayload {
+  errors: [ErrorMessage!]
+  success: Boolean!
+  viewer: Viewer
+}
+
+input UpdateTradingCardImageInput {
+  cloudStorageLocation: String
+  face: CardFace!
+  rawCardId: Int!
+}
+
+type UpdateTradingCardImagePayload {
+  errors: [ErrorMessage!]
+  success: Boolean!
+  tradingCard: TradingCard
+}
+
+input UpdateTradingCardInput {
+  id: ID!
+  with: UpdateTradingCardWithInput = {}
+}
+
+type UpdateTradingCardPayload {
+  errors: [ErrorMessage!]
+  success: Boolean!
+  tradingCard: TradingCard
+}
+
+input UpdateTradingCardWithInput {
+  autographed: Boolean
+  captureType: CaptureType
+  card: CardWith
+  certificationNumber: String
+  condition: CardConditionWith
+  notes: String
+  public: Boolean
+  purchaseDate: Date
+  purchasePrice: MoneyInput
+}
+
+input UpdateUsernameInput {
+  username: String!
+}
+
+type UpdateUsernamePayload {
+  errors: [ErrorMessage!]
+  profile: Profile
+  success: Boolean!
+}
+
+input UpdateUserPasswordInput {
+  password: String!
+  passwordConfirmation: String!
+}
+
+type UpdateUserPasswordPayload {
+  errors: [ErrorMessage!]
+  profile: Profile
+  success: Boolean!
+}
+
+input UseRedemptionCodeInput {
+  code: String!
+}
+
+type UseRedemptionCodePayload {
+  errors: [ErrorMessage!]
+  redemptionCode: RedemptionCode
+  success: Boolean!
+}
+
+input VerifyEmailInput {
+  emailVerificationToken: String!
+}
+
+type VerifyEmailPayload {
+  errors: [ErrorMessage!]
+  profile: Profile
+  success: Boolean!
+}
+
+"""Me!"""
+type Viewer {
+  addresses: [Address!]!
+  buyerSettings: BuyerSettings
+
+  """Am I allowed to delete my account?"""
+  canIDeleteMyAccount: Boolean
+  configuration: ViewerConfiguration
+  deals(after: String, before: String, first: Int, last: Int, orderBy: [DealsOrder!] = [UPDATED_AT_DESC], with: DealsWith = {includeEmpty: false, meAs: EITHER}): DealConnection
+  defaultAddress: Address
+  engagement: [String!]!
+  likedTradingCards(after: String, before: String, first: Int, last: Int, orderBy: [TradingCardOrder!] = [UPDATED_AT_DESC], with: TradingCardsWith): TradingCardConnection
+  marketing: Marketing!
+  myAuthToken: String
+  myIpAddress: String
+
+  """Balances, transactions"""
+  myMoney: MyMoney
+  notificationUnreadCount: Int
+  notifications(after: String, before: String, first: Int, last: Int, orderBy: [NotificationsOrder!] = [AT_DESC], with: NotificationsWith): NotificationConnection
+  orders(after: String, before: String, first: Int, last: Int, orderBy: [AllOrdersOrder!] = [UPDATED_AT_DESC], with: OrdersWith = {meAs: EITHER}): OrderConnection
+  privacySettings: PrivacySettings
+  profile: Profile!
+  recentSearches(after: String, before: String, first: Int, last: Int): RecentSearchConnection @deprecated(reason: "replaced by savedSearches")
+  recommendations: Recommendations!
+  savedForLater(after: String, before: String, first: Int, last: Int): SavedForLaterConnection
+  savedSearches(after: String, before: String, first: Int, last: Int): SavedSearchConnection
+  scans(after: String, before: String, first: Int, last: Int): ScanConnection
+  sellerSettings: SellerSettings
+}
+
+"""What portions of the app have been configured?"""
+type ViewerConfiguration {
+  hasSellerSettings: Boolean
+}
+
+type WeblinkNotification implements Node & Notification {
+  at: DateTime!
+  expiresAt: Int
+
+  """The ID of an object"""
+  id: ID!
+  imageUrl: String
+  link: String!
+  message: String
+  owner: Profile!
+  read: Boolean!
+  who: Profile
+}
+
+type Weight {
+  unit: UnitOfMeasureForWeight
+  value: Float
+}
+
+input WeightInput {
+  unit: UnitOfMeasureForWeight!
+  value: Float!
+}
+
+type Withdrawal implements Node {
+  at: DateTime!
+  fee: Money!
+
+  """The ID of an object"""
+  id: ID!
+  profile: Profile!
+  status: WithdrawalStatus!
+  stripeExternalAccountLast4: String
+  stripeFailureMessage: String
+  value: Money!
+}
+
+type WithdrawalConnection {
+  edges: [WithdrawalEdge]
+  pageInfo: PageInfo!
+}
+
+type WithdrawalEdge {
+  cursor: String
+  node: Withdrawal
+}
+
+enum WithdrawalStatus {
+  FAILED
+  FINISHED
+  STARTED
+}
+
+"""Options that can be used to find a single Withdrawal"""
+input WithdrawalWith {
+  id: ID
+}
+
+input WithdrawMoneyInput {
+  amountToReedem: MoneyInput!
+  externalAccountId: String!
+}
+
+type WithdrawMoneyPayload {
+  errors: [ErrorMessage!]
+  myMoney: MyMoney
+  success: Boolean!
+}
+

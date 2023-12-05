@@ -1,0 +1,83 @@
+diff --git a/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/CameraView+TakePhoto.kt b/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/CameraView+TakePhoto.kt
+index 236fff1..eb66b62 100644
+--- a/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/CameraView+TakePhoto.kt
++++ b/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/CameraView+TakePhoto.kt
+@@ -49,14 +49,13 @@ suspend fun CameraView.takePhoto(optionsMap: ReadableMap): WritableMap {
+ 
+     val cameraCharacteristics = cameraManager.getCameraCharacteristics(cameraId!!)
+ 
+-    val path = savePhotoToFile(context, cameraCharacteristics, photo)
++    val map = Arguments.createMap()
++
++    val path = savePhotoToFile(context, cameraCharacteristics, photo, map)
+ 
+     Log.i(TAG, "Successfully saved photo to file! $path")
+ 
+-    val map = Arguments.createMap()
+     map.putString("path", path)
+-    map.putInt("width", photo.image.width)
+-    map.putInt("height", photo.image.height)
+     map.putString("orientation", photo.orientation.unionValue)
+     map.putBoolean("isRawPhoto", photo.format == ImageFormat.RAW_SENSOR)
+     map.putBoolean("isMirrored", photo.isMirrored)
+@@ -65,36 +64,45 @@ suspend fun CameraView.takePhoto(optionsMap: ReadableMap): WritableMap {
+   }
+ }
+ 
+-private fun writePhotoToFile(photo: CameraSession.CapturedPhoto, file: File) {
++private fun writePhotoToFile(photo: CameraSession.CapturedPhoto, file: File, map: WritableMap) {
+   val byteBuffer = photo.image.planes[0].buffer
++  val imageBytes = ByteArray(byteBuffer.remaining()).apply { byteBuffer.get(this) }
++  var bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
++
++  var matrix: Matrix? = null
++
+   if (photo.isMirrored) {
+-    val imageBytes = ByteArray(byteBuffer.remaining()).apply { byteBuffer.get(this) }
+-    val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+-    val matrix = Matrix()
++    matrix = Matrix()
+     matrix.preScale(-1f, 1f)
+-    val processedBitmap =
+-      Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, false)
+-    FileOutputStream(file).use { stream ->
+-      processedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+-    }
+-  } else {
+-    val channel = FileOutputStream(file).channel
+-    channel.write(byteBuffer)
+-    channel.close()
++  } else if (photo.orientation.toDegrees() > 0 && bitmap.width > bitmap.height) {
++    matrix = Matrix()
++    matrix.postRotate(photo.orientation.toDegrees().toFloat())
++  }
++
++  if (matrix != null) {
++    bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, false)
++  }
++
++  map.putInt("width", bitmap.width)
++  map.putInt("height", bitmap.height)
++
++  FileOutputStream(file).use { stream ->
++    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+   }
+ }
+ 
+ private suspend fun savePhotoToFile(
+   context: Context,
+   cameraCharacteristics: CameraCharacteristics,
+-  photo: CameraSession.CapturedPhoto
++  photo: CameraSession.CapturedPhoto,
++  map: WritableMap
+ ): String =
+   withContext(Dispatchers.IO) {
+     when (photo.format) {
+       // When the format is JPEG or DEPTH JPEG we can simply save the bytes as-is
+       ImageFormat.JPEG, ImageFormat.DEPTH_JPEG -> {
+         val file = createFile(context, ".jpg")
+-        writePhotoToFile(photo, file)
++        writePhotoToFile(photo, file, map)
+         return@withContext file.absolutePath
+       }
+ 
